@@ -17,4 +17,5 @@ public class PlayerStats : MonoBehaviour
         GameManager.TakeDamge(amount);
         health = GameManager.PlayerStats.CurrentHealth;
     }
+
 }

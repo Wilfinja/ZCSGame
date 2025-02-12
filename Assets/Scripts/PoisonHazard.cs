@@ -89,9 +89,11 @@ public class PoisonHazard : MonoBehaviour
         {
             // Try to get health component
             PlayerStats healthComponent = other.GetComponent<PlayerStats>();
+            DamageFlash damageFlash = other.GetComponent<DamageFlash>();
             if (healthComponent != null)
             {
                 healthComponent.TakeDamage(damagePerTick);
+                damageFlash.Flash();
             }
 
             currentDamageTimer = 0f;
