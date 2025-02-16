@@ -25,6 +25,12 @@ public class PoisonHazard : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private int currentLoop = 0;
 
+    [SerializeField]
+    private float rotationSpeed = 100f; // Degrees per second
+
+    [SerializeField]
+    private bool rotateClockwise = true;
+
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -38,6 +44,12 @@ public class PoisonHazard : MonoBehaviour
 
         // Start the cloud lifecycle
         StartCoroutine(CloudLoop());
+    }
+
+    private void Update()
+    {
+        float direction = rotateClockwise ? -1f : 1f;
+        transform.Rotate(0f, 0f, rotationSpeed * direction * Time.deltaTime);
     }
 
     private IEnumerator CloudLoop()
@@ -69,6 +81,8 @@ public class PoisonHazard : MonoBehaviour
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
+
+            yield return new WaitForSeconds(activeTime);
 
             currentLoop++;
         }

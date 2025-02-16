@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 
     public int health;
 
+    public HealthBarScript healthBar;
+
     //Character stats and conditions
     public class CharacterStats
     {
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
     private void LoadStats()
     {
         PlayerStats.MaxHealth = PlayerPrefs.GetInt("MaxHealth", 100);
+        healthBar.SetMaxHealth(PlayerStats.MaxHealth);
     }
 
     //Method to update stats like when leveling up etc.
@@ -74,5 +77,6 @@ public class GameManager : MonoBehaviour
     public void TakeDamge (int amount)
     {
         PlayerStats.CurrentHealth = Mathf.Max(PlayerStats.CurrentHealth -  amount, 0);
+        healthBar.SetHeatlth(PlayerStats.CurrentHealth);
     }
 }
