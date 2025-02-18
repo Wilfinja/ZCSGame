@@ -10,12 +10,15 @@ public class GameManager : MonoBehaviour
     public int health;
 
     public HealthBarScript healthBar;
+    public ChairBarScript chairBar;
 
     //Character stats and conditions
     public class CharacterStats
     {
         public int MaxHealth { get; set; } = 100;
         public int CurrentHealth { get; set; } = 100;
+        public int MaxChairLevel { get; set; } = 5;
+        public int CurrentChairLevel { get; set; } = 1;
 
     }
 
@@ -50,6 +53,8 @@ public class GameManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("MaxHealth", PlayerStats.MaxHealth);
         PlayerPrefs.SetInt("CurrentHealth", PlayerStats.CurrentHealth);
+        PlayerPrefs.SetInt("MaxChairLevel", PlayerStats.MaxChairLevel);
+        PlayerPrefs.SetInt("CurrentChairLevel", PlayerStats.CurrentChairLevel);
         PlayerPrefs.Save();
     }
 
@@ -58,6 +63,7 @@ public class GameManager : MonoBehaviour
     {
         PlayerStats.MaxHealth = PlayerPrefs.GetInt("MaxHealth", 100);
         healthBar.SetMaxHealth(PlayerStats.MaxHealth);
+        chairBar.SetMaxChair(PlayerStats.MaxChairLevel);
     }
 
     //Method to update stats like when leveling up etc.
@@ -78,5 +84,11 @@ public class GameManager : MonoBehaviour
     {
         PlayerStats.CurrentHealth = Mathf.Max(PlayerStats.CurrentHealth -  amount, 0);
         healthBar.SetHeatlth(PlayerStats.CurrentHealth);
+    }
+
+    public void UpgradeChair (int amount)
+    {
+        PlayerStats.CurrentChairLevel = Mathf.Max(PlayerStats.CurrentChairLevel - amount, 0);
+        chairBar.SetChair(PlayerStats.CurrentChairLevel);
     }
 }
