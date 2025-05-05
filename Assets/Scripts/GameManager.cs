@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
         if (PlayerStats == null)
         {
             PlayerStats = new CharacterStats();
-            LoadStats();
+            LoadHealthStats();
         }
     }
 
@@ -59,10 +59,16 @@ public class GameManager : MonoBehaviour
     }
 
     //Load stats from PlayerPrefs
-    private void LoadStats()
+    public void LoadHealthStats()
     {
         PlayerStats.MaxHealth = PlayerPrefs.GetInt("MaxHealth", 100);
         healthBar.SetMaxHealth(PlayerStats.MaxHealth);
+        
+    }
+
+    public void LoadChairStats()
+    {
+        PlayerStats.MaxChairLevel = PlayerPrefs.GetInt("MaxChairLevel", 5);
         chairBar.SetMaxChair(PlayerStats.MaxChairLevel);
     }
 

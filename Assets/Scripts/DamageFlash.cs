@@ -25,7 +25,7 @@ public class DamageFlash : MonoBehaviour
 
     public void Flash()
     {
-        Debug.Log("Flashed");
+        //Debug.Log("Flashed");
         if (flashRoutine != null)
         {
             StopCoroutine(flashRoutine);

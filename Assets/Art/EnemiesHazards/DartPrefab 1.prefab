@@ -89,6 +89,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DartPrefab 1
       objectReference: {fileID: 0}
+    - target: {fileID: -2253911629886400664, guid: 0558c350cbeab4548900ad71210cd4d9, type: 3}
+      propertyPath: m_TagString
+      value: Spawned
+      objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 0558c350cbeab4548900ad71210cd4d9, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.1

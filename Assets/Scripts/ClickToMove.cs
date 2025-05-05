@@ -27,6 +27,13 @@ public class ClickToMove : MonoBehaviour
 
     public Transform itemHold;
 
+    public static ClickToMove Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -43,11 +50,18 @@ public class ClickToMove : MonoBehaviour
         slowAmount = 1f;
     }
 
+    public void gameOver()
+    {
+        //Debug.Log("GAME OVER ClickToMove");
+
+        animator.Play("Game Over");
+    }
+
     public void Push()
     {
         if (!pushDisabled)
         {
-            Debug.Log("Pushed");
+            //Debug.Log("Pushed");
 
             animator.Play("[Push]");
 
@@ -67,7 +81,7 @@ public class ClickToMove : MonoBehaviour
     {
         if (!pullDisabled)
         {
-            Debug.Log("Pulled");
+            //Debug.Log("Pulled");
 
             animator.Play("[Pull]");
 

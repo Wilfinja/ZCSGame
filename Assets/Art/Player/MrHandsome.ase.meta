@@ -1,8 +1,13 @@
 fileFormatVersion: 2
-guid: a38d4e64e2f3a1d4aab66e2e86910caf
+guid: 9ca5f4195a4955642a475b920a7d1b9e
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects:
+  - first:
+      type: UnityEngine:AnimationClip
+      assembly: UnityEngine.AnimationModule
+      name: Game Over
+    second: {fileID: 7400000, guid: 1f5a9fac4ee45234db2f9fbce5167e16, type: 2}
   - first:
       type: UnityEngine:AnimationClip
       assembly: UnityEngine.AnimationModule
@@ -94,7 +99,7 @@ ScriptedImporter:
     fileImportMode: 1
     importHiddenLayers: 0
     layerImportMode: 1
-    defaultPivotSpace: 1
+    defaultPivotSpace: 0
     defaultPivotAlignment: 0
     customPivotPosition: {x: 0.5, y: 0.5}
     mosaicPadding: 4
@@ -107,7 +112,7 @@ ScriptedImporter:
     fileImportMode: 1
     importHiddenLayers: 0
     layerImportMode: 1
-    defaultPivotSpace: 1
+    defaultPivotSpace: 0
     defaultPivotAlignment: 0
     customPivotPosition: {x: 0.5, y: 0.5}
     mosaicPadding: 4
@@ -117,7 +122,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638671107562109184
+  platformSettingsDirtyTick: 638815138863076735
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -143,16 +148,16 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: MrHandsome_Frame_0
     originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
+    pivot: {x: 0.5, y: 0.36956522}
+    alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 56
-      y: 178
+      x: 112
+      y: 73
       width: 46
       height: 46
-    spriteID: 4b1dcb077e8482c42a11b3c0d37a0edf
+    spriteID: a24de797666f55a4f8c9cb98a5a8baeb
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -160,19 +165,19 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 56, y: 178}
+    uvTransform: {x: 112, y: 73}
   - name: MrHandsome_Frame_1
     originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
+    pivot: {x: 0.5, y: 0.42}
+    alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 56
+      x: 170
       y: 4
       width: 46
       height: 50
-    spriteID: ce5b16a394698c84db38a0626aec2bdb
+    spriteID: 5a6fe3cc6f8a500439ee50f7b5a076b2
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -180,19 +185,59 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 56, y: 4}
+    uvTransform: {x: 170, y: 4}
   - name: MrHandsome_Frame_2
     originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
+    pivot: {x: 0.5, y: 0.4339623}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 118
+      y: 4
+      width: 44
+      height: 53
+    spriteID: 546d51f82ee391b4f8a016cb69978f4d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 118, y: 4}
+  - name: MrHandsome_Frame_3
+    originalName: 
+    pivot: {x: 0.5, y: 0.45762712}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 66
+      y: 4
+      width: 44
+      height: 59
+    spriteID: 63e73bbf3c424a54c99f940b87a4bd86
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 66, y: 4}
+  - name: MrHandsome_Frame_4
+    originalName: 
+    pivot: {x: 0.5, y: 0.42}
+    alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
-      y: 71
-      width: 44
-      height: 53
-    spriteID: 6b79766a14f7ea946b75b4aa635371bd
+      y: 73
+      width: 46
+      height: 50
+    spriteID: 6854a03491f381a42877c734478e2875
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -200,19 +245,159 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 71}
-  - name: MrHandsome_Frame_3
+    uvTransform: {x: 4, y: 73}
+  - name: MrHandsome_Frame_5
     originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
+    pivot: {x: 0.5, y: 0.36956522}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 166
+      y: 73
+      width: 46
+      height: 46
+    spriteID: 67b8cf40448afd64fb0054c26673c177
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 166, y: 73}
+  - name: MrHandsome_Frame_6
+    originalName: 
+    pivot: {x: 0.5, y: 0.42}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 58
+      y: 73
+      width: 46
+      height: 50
+    spriteID: 18ea52669a173824f99c025203f18acb
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 58, y: 73}
+  - name: MrHandsome_Frame_7
+    originalName: 
+    pivot: {x: 0.5, y: 0.35714287}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 185
+      width: 46
+      height: 42
+    spriteID: 53123d47958479a4dad814c1f2df5ccc
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 185}
+  - name: MrHandsome_Frame_8
+    originalName: 
+    pivot: {x: 0.5, y: 0.36956522}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 131
+      width: 46
+      height: 46
+    spriteID: 1291bf102a838c941878a8422b043a2e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 131}
+  - name: MrHandsome_Frame_9
+    originalName: 
+    pivot: {x: 0.5, y: 0.36956522}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 58
+      y: 131
+      width: 46
+      height: 46
+    spriteID: fd034666a66028b448739fdd1db03253
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 58, y: 131}
+  - name: MrHandsome_Frame_11
+    originalName: 
+    pivot: {x: 0.5, y: 0.36956522}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 112
+      y: 131
+      width: 46
+      height: 46
+    spriteID: e215b52ec991b004994d6faa017c8bdf
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 112, y: 131}
+  - name: MrHandsome_Frame_13
+    originalName: 
+    pivot: {x: 0.5, y: 0.36956522}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 166
+      y: 131
+      width: 46
+      height: 46
+    spriteID: a8491458e4d6a9b42a8552be62f9d778
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 166, y: 131}
+  - name: MrHandsome_Frame_14
+    originalName: 
+    pivot: {x: 0.5740741, y: 0.27868852}
+    alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 44
-      height: 59
-    spriteID: 477b9abd41c7f52478b62697b9bc29c0
+      width: 54
+      height: 61
+    spriteID: 2c67ae6220d03ce45913487b8a7a22c5
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -221,146 +406,6 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: MrHandsome_Frame_4
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 56
-      y: 62
-      width: 46
-      height: 50
-    spriteID: cb29d9b36cb87264cb966b34609d48ed
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 56, y: 62}
-  - name: MrHandsome_Frame_5
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 110
-      y: 4
-      width: 46
-      height: 46
-    spriteID: a481fb89ce9a7844c921defe4440ae3b
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 110, y: 4}
-  - name: MrHandsome_Frame_6
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 56
-      y: 120
-      width: 46
-      height: 50
-    spriteID: 736444a3b33623541af002a87baba4b6
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 56, y: 120}
-  - name: MrHandsome_Frame_7
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 164
-      y: 4
-      width: 46
-      height: 42
-    spriteID: ed211c75385df984fb5241c49fb55b95
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 164, y: 4}
-  - name: MrHandsome_Frame_8
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 110
-      y: 58
-      width: 46
-      height: 46
-    spriteID: 4053122d331714447a5d12aa09d5c954
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 110, y: 58}
-  - name: MrHandsome_Frame_9
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 110
-      y: 112
-      width: 46
-      height: 46
-    spriteID: 66c7c5f0e3b4cf2408ca682dcaf83158
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 110, y: 112}
-  - name: MrHandsome_Frame_11
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 110
-      y: 166
-      width: 46
-      height: 46
-    spriteID: 6ab2fb9de5c7b7f44baf42ad6c6fada8
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 110, y: 166}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -374,90 +419,106 @@ ScriptedImporter:
       frameIndex: 0
       cellRect:
         x: 9
-        y: 15
+        y: 47
         width: 46
         height: 46
-      spriteId: 4b1dcb077e8482c42a11b3c0d37a0edf
+      spriteId: a24de797666f55a4f8c9cb98a5a8baeb
     - name: MrHandsome_Frame_1
       frameIndex: 1
       cellRect:
         x: 9
-        y: 11
+        y: 43
         width: 46
         height: 50
-      spriteId: ce5b16a394698c84db38a0626aec2bdb
+      spriteId: 5a6fe3cc6f8a500439ee50f7b5a076b2
     - name: MrHandsome_Frame_2
       frameIndex: 2
       cellRect:
         x: 10
-        y: 9
+        y: 41
         width: 44
         height: 53
-      spriteId: 6b79766a14f7ea946b75b4aa635371bd
+      spriteId: 546d51f82ee391b4f8a016cb69978f4d
     - name: MrHandsome_Frame_3
       frameIndex: 3
       cellRect:
         x: 10
-        y: 5
+        y: 37
         width: 44
         height: 59
-      spriteId: 477b9abd41c7f52478b62697b9bc29c0
+      spriteId: 63e73bbf3c424a54c99f940b87a4bd86
     - name: MrHandsome_Frame_4
       frameIndex: 4
       cellRect:
         x: 9
-        y: 11
+        y: 43
         width: 46
         height: 50
-      spriteId: cb29d9b36cb87264cb966b34609d48ed
+      spriteId: 6854a03491f381a42877c734478e2875
     - name: MrHandsome_Frame_5
       frameIndex: 5
       cellRect:
         x: 9
-        y: 15
+        y: 47
         width: 46
         height: 46
-      spriteId: a481fb89ce9a7844c921defe4440ae3b
+      spriteId: 67b8cf40448afd64fb0054c26673c177
     - name: MrHandsome_Frame_6
       frameIndex: 6
       cellRect:
         x: 9
-        y: 11
+        y: 43
         width: 46
         height: 50
-      spriteId: 736444a3b33623541af002a87baba4b6
+      spriteId: 18ea52669a173824f99c025203f18acb
     - name: MrHandsome_Frame_7
       frameIndex: 7
       cellRect:
         x: 9
-        y: 17
+        y: 49
         width: 46
         height: 42
-      spriteId: ed211c75385df984fb5241c49fb55b95
+      spriteId: 53123d47958479a4dad814c1f2df5ccc
     - name: MrHandsome_Frame_8
       frameIndex: 8
       cellRect:
         x: 9
-        y: 15
+        y: 47
         width: 46
         height: 46
-      spriteId: 4053122d331714447a5d12aa09d5c954
+      spriteId: 1291bf102a838c941878a8422b043a2e
     - name: MrHandsome_Frame_9
       frameIndex: 9
       cellRect:
         x: 9
-        y: 15
+        y: 47
         width: 46
         height: 46
-      spriteId: 66c7c5f0e3b4cf2408ca682dcaf83158
+      spriteId: fd034666a66028b448739fdd1db03253
     - name: MrHandsome_Frame_11
       frameIndex: 11
       cellRect:
         x: 9
-        y: 15
+        y: 47
         width: 46
         height: 46
-      spriteId: 6ab2fb9de5c7b7f44baf42ad6c6fada8
+      spriteId: e215b52ec991b004994d6faa017c8bdf
+    - name: MrHandsome_Frame_13
+      frameIndex: 13
+      cellRect:
+        x: 9
+        y: 47
+        width: 46
+        height: 46
+      spriteId: a8491458e4d6a9b42a8552be62f9d778
+    - name: MrHandsome_Frame_14
+      frameIndex: 14
+      cellRect:
+        x: 1
+        y: 47
+        width: 54
+        height: 61
+      spriteId: 2c67ae6220d03ce45913487b8a7a22c5
     linkedCells: []
     parentIndex: -1
   platformSettings:
@@ -485,31 +546,7 @@ ScriptedImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     androidETC2FallbackOverride: 0
-  - name: Android
-    overridden: 0
-    ignorePlatformSupport: 0
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    androidETC2FallbackOverride: 0
-  - name: iPhone
-    overridden: 0
-    ignorePlatformSupport: 0
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    androidETC2FallbackOverride: 0
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 64, y: 64}
+  canvasSize: {x: 64, y: 128}

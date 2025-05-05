@@ -17,5 +17,20 @@ public class PersistingScript : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        // Register with the manager
+        if (PersistantObjDestroyer.Instance != null)
+        {
+            PersistantObjDestroyer.Instance.RegisterPersistentObject(gameObject);
+        }
+    }
+
+    void OnDestroy()
+    {
+        // Unregister when destroyed
+        if (PersistantObjDestroyer.Instance != null)
+        {
+            PersistantObjDestroyer.Instance.UnregisterPersistentObject(gameObject);
+        }
     }
 }

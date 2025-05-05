@@ -4,11 +4,46 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform playerTransform;
+    public GameObject playerTransform;
 
-    // Update is called once per frame
-    void Update()
+    private Transform cameraLocation;
+
+    public static CameraFollow Instance { get; private set; }
+
+    private void Awake()
     {
-        transform.position = playerTransform.position;
+
+        playerTransform = GameObject.Find("MrHandsome");
+        cameraLocation = playerTransform.transform.Find("CameraPosition");
+
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+
+    }
+
+
+        // Update is called once per frame
+        void Update()
+    {
+
+        if (playerTransform == null)
+        {
+            playerTransform = GameObject.Find("MrHandsome");
+            cameraLocation = playerTransform.transform.Find("CameraPosition");
+        }
+        else
+        {
+            transform.position = cameraLocation.position;
+        }
+        
+
     }
 }
