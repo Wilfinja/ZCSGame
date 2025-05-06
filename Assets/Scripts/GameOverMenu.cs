@@ -21,6 +21,8 @@ public class GameOverMenu : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         gameManager = GameObject.Find("GameManager");
         gameCamera = GameObject.FindGameObjectWithTag("MainCamera");
+
+        //StartCoroutine(BeginDisable());
     }
 
 
@@ -61,9 +63,18 @@ public class GameOverMenu : MonoBehaviour
 
         PersistantObjDestroyer.Instance.DestroyAllPersistentObjects();
         Destroy(gameManager);
+
+        player.GetComponent<PlayerStats>().PauseRegen();
         Destroy(player);
         Destroy(gameCamera);
 
         SceneManager.LoadScene(currentScene.buildIndex);
     }
+
+    //IEnumerator BeginDisable()
+    //{
+    //    yield return new WaitForSeconds(0.1f);
+
+    //    gameOverMenuUI.gameObject.SetActive(false);
+    //}
 }

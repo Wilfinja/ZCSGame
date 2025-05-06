@@ -26,16 +26,21 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        healthBar = FindObjectOfType<HealthBarScript>();
+        chairBar = FindObjectOfType<ChairBarScript>();
+
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
             InitializeStats();
+
         }
         else
         {
             Destroy(gameObject);
         }
+
     }
 
     private void InitializeStats()

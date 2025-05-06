@@ -12,6 +12,11 @@ public class PauseMenu : MonoBehaviour
 
     public GameObject gameManager;
 
+    private void Awake()
+    {
+        //StartCoroutine(BeginDisable());
+    }
+
     public void Pause()
     {
         if (gameIsPaused)
@@ -50,4 +55,16 @@ public class PauseMenu : MonoBehaviour
     {
         
     }
+
+    public void Regen()
+    {
+        gameObject.SetActive(true);
+    }
+
+    //IEnumerator BeginDisable()
+    //{
+    //    yield return new WaitForSeconds(0.1f);
+
+    //    pauseMenuUI.gameObject.SetActive(false);
+    //}
 }

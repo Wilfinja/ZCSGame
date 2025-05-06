@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
     public GameManager GameManager;
     public GameObject GameOverScreen;
+    public GameObject pauseMenu;
+    //public GameObject mainCanvas;
 
     public static bool GameOver = false;
 
@@ -22,13 +25,25 @@ public class PlayerStats : MonoBehaviour
 
     private Rigidbody2D rb;
 
-    public GameOverMenu GameOverMenu;
+    public GameOverMenu gameOverMenu;
     public ClickToMove ClickToMove;
 
     public static PlayerStats Instance { get; private set; }
 
     private void Awake()
     {
+        dragBar = FindObjectOfType<DragBarScript>();
+
+        //mainCanvas = GameObject.Find("Canvas");
+
+        gameOverMenu = FindObjectOfType<GameOverMenu>();
+
+        GameOverScreen = GameObject.Find("GameOverScreen");
+        GameOverScreen.SetActive(false);
+
+        pauseMenu = GameObject.Find("PauseMenu");
+        pauseMenu.SetActive(false);
+
         if (Instance == null)
         {
             Instance = this;
@@ -38,11 +53,16 @@ public class PlayerStats : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+
     }
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+
+
 
         //GameOverScreen = GameObject.FindGameObjectWithTag("GameOverScreen");
     }
@@ -72,7 +92,7 @@ public class PlayerStats : MonoBehaviour
 
             ClickToMove.gameOver();
 
-            GameOverMenu.GameOver();
+            gameOverMenu.GameOver();
 
             //Set the game over script here. Should be similar to the main menu pause script.
             GameOver = true;
@@ -80,4 +100,10 @@ public class PlayerStats : MonoBehaviour
 
         }
     }
+
+    public void PauseRegen()
+    {
+        pauseMenu.SetActive(true );
+    }
+
 }
