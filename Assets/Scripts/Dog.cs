@@ -13,7 +13,7 @@ public class Dog : MonoBehaviour
     [Header("Chasing Properties")]
     public float chaseRadius = 10f;
     public float stopChaseDistance = 0.5f;
-    public float itemChaseRadius = 15f;
+    public float itemChaseRadius = 15f; // This is bigger than regular chase radius
 
     [Header("Item Drop")]
     public GameObject droppedItemPrefab;
@@ -60,7 +60,7 @@ public class Dog : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         playerTarget = FindObjectOfType<ClickToMove>();
 
-        player = playerTarget.transform;
+        player = playerTarget != null ? playerTarget.transform : null;
 
         lasPosition = transform.position;
 
@@ -68,43 +68,74 @@ public class Dog : MonoBehaviour
 
         eatFinished = true;
 
-        animator.Play("Walk");
+        // Make sure NavMeshAgent speed matches our moveSpeed
+        navMeshAgent.speed = moveSpeed;
+
+        if (animator != null)
+        {
+            animator.Play("Walk");
+        }
     }
 
     private void Update()
     {
-
         canSeePlayer = CheckLineOfSight();
 
-        // First, check for nearby throwable items
-        if (FindNearestItem())
+        bool foundItem = FindNearestItem();
+
+        // First priority: Chase throwable items if found
+        if (foundItem && currentTarget != null)
         {
+            // Make sure agent is not stopped
+            navMeshAgent.isStopped = false;
+
+            // Set destination to the item
             navMeshAgent.SetDestination(currentTarget.transform.position);
+
+            // Check if we've reached the item
             CheckItemChaseComplete();
-            animator.Play("Run");
+
+            // Set animation
+            if (animator != null)
+            {
+                animator.Play("Run");
+            }
+
+            //if (drawDebugLines)
+            //{
+            //    Debug.DrawLine(transform.position, currentTarget.transform.position, Color.green);
+            //}
         }
-        // If no items, chase the player
-        else if (slowedPlayer == false && canSeePlayer && eatFinished == true)
+        // Second priority: Chase player if not slowed and can see player
+        else if (!slowedPlayer && canSeePlayer && eatFinished)
         {
             navMeshAgent.isStopped = false;
-            navMeshAgent.SetDestination(playerTarget.transform.position);
-            animator.Play("Run");
+            navMeshAgent.SetDestination(player.position);
+
+            if (animator != null)
+            {
+                animator.Play("Run");
+            }
         }
-        else if (slowedPlayer == true || eatFinished == false)
-        {
-            navMeshAgent.isStopped = true;
-            animator.Play("Walk");
-        }
+        // Otherwise: Stop moving (when slowed or eating)
         else
         {
             navMeshAgent.isStopped = true;
-            animator.Play("Walk");
+
+            if (animator != null)
+            {
+                animator.Play("Walk");
+            }
         }
 
-        Vector2 currentPosition = transform.position;
-        Vector2 movementDirection;
+        // Handle rotation based on movement direction
+        UpdateRotation();
+    }
 
-        movementDirection = navMeshAgent.velocity.normalized;
+    private void UpdateRotation()
+    {
+        // Get the direction from the NavMeshAgent's velocity
+        Vector2 movementDirection = navMeshAgent.velocity.normalized;
 
         if (movementDirection.magnitude > 0.01f)
         {
@@ -113,12 +144,12 @@ public class Dog : MonoBehaviour
             // Calculate the angle for rotation
             float angle = Mathf.Atan2(currentDirection.y, currentDirection.x) * Mathf.Rad2Deg;
 
-            Quaternion targetRotation = Quaternion.Euler(0, 0, angle-90);
+            Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90);
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 targetRotation,
                 rotationSpeed * Time.deltaTime
-                );
+            );
         }
     }
 
@@ -127,18 +158,18 @@ public class Dog : MonoBehaviour
         if (player == null) return false;
 
         // Check if player is within radius first
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.transform.position);
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         if (distanceToPlayer > detectionRadius) return false;
 
         // Calculate direction to player
-        Vector2 directionToPlayer = (playerTarget.transform.position - transform.position).normalized;
+        Vector2 directionToPlayer = (player.position - transform.position).normalized;
 
         // Create the raycast
         RaycastHit2D hit = Physics2D.Raycast(
             transform.position,          // Start position
-            directionToPlayer,          // Direction
-            detectionRadius,            // Max distance
-            obstacleLayer | playerLayer // What to hit
+            directionToPlayer,           // Direction
+            detectionRadius,             // Max distance
+            obstacleLayer | playerLayer  // What to hit
         );
 
         // Draw debug ray in scene view
@@ -163,7 +194,8 @@ public class Dog : MonoBehaviour
         if (currentTarget == null) return;
 
         // Check if close enough to item
-        if (Vector2.Distance(transform.position, currentTarget.transform.position) <= stopChaseDistance)
+        float distance = Vector2.Distance(transform.position, currentTarget.transform.position);
+        if (distance <= stopChaseDistance)
         {
             Destroy(currentTarget.gameObject);
             StartCoroutine(EatCheese());
@@ -175,43 +207,32 @@ public class Dog : MonoBehaviour
     {
         // Find all throwable items in the scene
         ThrowableItem[] items = FindObjectsOfType<ThrowableItem>();
-        float closestDistance = chaseRadius;
-        currentTarget = null;
+
+        // Use itemChaseRadius instead of chaseRadius for items
+        float closestDistance = itemChaseRadius;
+        ThrowableItem closestItem = null;
 
         foreach (ThrowableItem item in items)
         {
-            // Skip items being held by player
-            if (item.transform.parent != null) continue;
+            // Skip items that are held by player or items that dog won't eat
+            if (item.transform.parent != null || !item.willEat)
+            {
+                continue;
+            }
 
             float distance = Vector2.Distance(transform.position, item.transform.position);
             if (distance < closestDistance)
             {
-                currentTarget = item;
+                closestItem = item;
                 closestDistance = distance;
-                return true;
             }
         }
 
-        return false;
-    }
+        // Update the current target
+        currentTarget = closestItem;
 
-    private void ChaseItem()
-    {
-        if (currentTarget == null) return;
-
-        // Calculate direction to item
-        Vector2 directionToItem = ((Vector2)currentTarget.transform.position - rb.position).normalized;
-
-        // Move towards the item
-        rb.velocity = directionToItem * moveSpeed;
-
-        // Stop chasing if very close to item
-        if (Vector2.Distance(transform.position, currentTarget.transform.position) <= stopChaseDistance)
-        {
-            rb.velocity = Vector2.zero;
-            Destroy(currentTarget.gameObject);
-            currentTarget = null;
-        }
+        // Return true if we found an item
+        return currentTarget != null;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -227,9 +248,10 @@ public class Dog : MonoBehaviour
 
         // Check if collided with the item being chased
         ThrowableItem item = collision.gameObject.GetComponent<ThrowableItem>();
-        if (item != null && item == currentTarget)
+        if (item != null && item == currentTarget && item.willEat)
         {
             Destroy(item.gameObject);
+            StartCoroutine(EatCheese());
             currentTarget = null;
         }
     }
@@ -249,11 +271,13 @@ public class Dog : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (drawDebugLines)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, detectionRadius);
-        }
+        // Draw detection radius
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+
+        // Draw item chase radius (in a different color)
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, itemChaseRadius);
     }
 
     // Public method to check if player is visible

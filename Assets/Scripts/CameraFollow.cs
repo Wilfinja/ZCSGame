@@ -37,7 +37,12 @@ public class CameraFollow : MonoBehaviour
         if (playerTransform == null)
         {
             playerTransform = GameObject.Find("MrHandsome");
-            cameraLocation = playerTransform.transform.Find("CameraPosition");
+
+            if(playerTransform != null)
+            {
+                cameraLocation = playerTransform.transform.Find("CameraPosition");
+            }
+            
         }
         else
         {

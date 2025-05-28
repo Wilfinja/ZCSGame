@@ -48,7 +48,7 @@ public class GameOverMenu : MonoBehaviour
         PersistantObjDestroyer.Instance.DestroyAllPersistentObjects();
         Destroy(gameManager);
         Destroy(player);
-
+        Destroy(gameCamera);
     }
 
     public void Quit()

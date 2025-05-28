@@ -7,6 +7,7 @@ TagManager:
   - PlayerSpawnPoint
   - GameOverScreen
   - Spawned
+  - Key
   layers:
   - Default
   - TransparentFX

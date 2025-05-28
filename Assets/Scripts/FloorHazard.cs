@@ -50,8 +50,8 @@ public class FloorHazard : MonoBehaviour
             if (entering)
             {
                 // Store the original drag in a new component
-                DragMemory dragMemory = other.gameObject.AddComponent<DragMemory>();
-                dragMemory.originalDrag = rb.drag;
+                //DragMemory dragMemory = other.gameObject.AddComponent<DragMemory>();
+                //dragMemory.originalDrag = rb.drag;
 
                 // Apply new drag
                 if (setAbsoluteDrag)

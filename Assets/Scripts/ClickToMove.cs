@@ -26,6 +26,7 @@ public class ClickToMove : MonoBehaviour
     public float minVelocityThreshold = 0.1f;
 
     public Transform itemHold;
+    private ThrowableItem heldItem; // Track the currently held item
 
     public static ClickToMove Instance { get; private set; }
 
@@ -48,6 +49,8 @@ public class ClickToMove : MonoBehaviour
         pushCooldown = .5f;
         pullCooldown = .25f;
         slowAmount = 1f;
+
+        heldItem = null; // Initialize held item to null
     }
 
     public void gameOver()
@@ -125,40 +128,14 @@ public class ClickToMove : MonoBehaviour
         pushDisabled = false;
     }
 
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    // Check if the colliding object has a Rigidbody2D
-    //    Rigidbody2D pusherRigidbody = GetComponent<Rigidbody2D>();
-    //    Rigidbody2D pusheeRigidbody = collision.gameObject.GetComponent<Rigidbody2D>();
-    //
-    //    if (pusherRigidbody != null && pusheeRigidbody != null)
-    //    {
-    //        // Get the current velocity of the pushing object
-    //        Vector2 currentVelocity = pusherRigidbody.velocity;
-    //
-    //        // Check if the velocity is significant enough to push
-    //        if (currentVelocity.magnitude >= minVelocityThreshold)
-    //        {
-    //            // Calculate push direction and force
-    //            Vector2 pushDirection = currentVelocity.normalized;
-    //            float pushForce = currentVelocity.magnitude * pushForceMultiplier;
-    //
-    //            // Apply the push force to the other object
-    //            pusheeRigidbody.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
-    //
-    //            // Optional: Debug log to verify push
-    //           Debug.Log($"Pushed {collision.gameObject.name} with force: {pushForce}");
-    //        }
-    //    }
-    //}
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Pickup item logic
+        // Pickup item logic - only pick up if we're not already holding an item
         ThrowableItem item = other.GetComponent<ThrowableItem>();
-        if (item != null && transform.childCount == 2)
+        if (item != null && heldItem == null)
         {
             item.Pickup(itemHold);
+            heldItem = item; // Store reference to the held item
         }
     }
 
@@ -176,15 +153,27 @@ public class ClickToMove : MonoBehaviour
 
     public void ThrowItem()
     {
-        // Find the first throwable item in children
-        ThrowableItem item = GetComponentInChildren<ThrowableItem>();
-        if (item != null)
+        // If we have a held item, throw it
+        if (heldItem != null)
         {
             // Calculate throw direction (towards mouse position)
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 throwDirection = (mousePosition - (Vector2)transform.position).normalized;
 
-            item.Throw(throwDirection);
+            heldItem.Throw(throwDirection);
+            heldItem = null; // Clear the held item reference
         }
+    }
+
+    // Check if player is holding an item
+    public bool IsHoldingItem()
+    {
+        return heldItem != null;
+    }
+
+    // Get the currently held item (can be null)
+    public ThrowableItem GetHeldItem()
+    {
+        return heldItem;
     }
 }
