@@ -1,0 +1,588 @@
+fileFormatVersion: 2
+guid: 4d1517b3d0eaf574b8072c64372c4ed7
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:AnimationClip
+      assembly: UnityEngine.AnimationModule
+      name: Burrito_Clip
+    second: {fileID: 7400000, guid: f3cba41806922cb41a2c0ad1add49055, type: 2}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 0
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 1
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 64
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  previousAsepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 0
+    customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  asepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 0
+    customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 638846277404843200
+  textureAssetName: 
+  singleSpriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: 
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  animatedSpriteImportData:
+  - name: Burrito_Frame_0
+    originalName: 
+    pivot: {x: 0.5, y: 0.4}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 42
+      y: 187
+      width: 18
+      height: 10
+    spriteID: d019c7df1dcb9b44c91af181a17dad71
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 42, y: 187}
+  - name: Burrito_Frame_1
+    originalName: 
+    pivot: {x: 0.5294118, y: 0.45454547}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 46
+      y: 166
+      width: 17
+      height: 11
+    spriteID: bca5ae62c0c29f841994646008e91f93
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 46, y: 166}
+  - name: Burrito_Frame_2
+    originalName: 
+    pivot: {x: 0.53968257, y: 0.46153846}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 63
+      height: 78
+    spriteID: 558994cbb96f801448a8764b3702643c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+  - name: Burrito_Frame_3
+    originalName: 
+    pivot: {x: 0.5, y: 0.45454547}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 90
+      width: 42
+      height: 44
+    spriteID: 11f370715db7b2a4c8ca278fa21cd6ab
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 90}
+  - name: Burrito_Frame_4
+    originalName: 
+    pivot: {x: 0.5294118, y: 0.45945948}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 142
+      width: 34
+      height: 37
+    spriteID: be4f5ae5ca7adae4c8af8cdef8ea3e87
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 142}
+  - name: Burrito_Frame_5
+    originalName: 
+    pivot: {x: 0.5, y: 0.47368422}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 187
+      width: 30
+      height: 38
+    spriteID: e28374fc6e84fa144a468eca222f4faf
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 187}
+  - name: Burrito_Frame_6
+    originalName: 
+    pivot: {x: 0.5, y: 0.4827586}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 75
+      y: 4
+      width: 30
+      height: 29
+    spriteID: b450e8476aeec8143b7b626927430d1f
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 75, y: 4}
+  - name: Burrito_Frame_7
+    originalName: 
+    pivot: {x: 0.5, y: 0.4615385}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 75
+      y: 41
+      width: 30
+      height: 26
+    spriteID: b8847238566cd5c419d22c2c82c43d60
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 75, y: 41}
+  - name: Burrito_Frame_8
+    originalName: 
+    pivot: {x: 0.5185185, y: 0.4814815}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 75
+      y: 75
+      width: 27
+      height: 27
+    spriteID: cae049cf2f6da3d4cab6762ddcab7990
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 75, y: 75}
+  - name: Burrito_Frame_9
+    originalName: 
+    pivot: {x: 0.5357143, y: 0.47826087}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 75
+      y: 110
+      width: 28
+      height: 23
+    spriteID: 91e3adb7f3ce5a8479b82cde4ca27edd
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 75, y: 110}
+  - name: Burrito_Frame_10
+    originalName: 
+    pivot: {x: 0.53846157, y: 0.45454547}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 75
+      y: 141
+      width: 26
+      height: 22
+    spriteID: ea2162f9f1ff2cb49af695829d6f545f
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 75, y: 141}
+  - name: Burrito_Frame_11
+    originalName: 
+    pivot: {x: 0.5, y: 0.42105263}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 233
+      width: 20
+      height: 19
+    spriteID: ac84cb7f84510b84abf99d4f97f408dd
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 233}
+  - name: Burrito_Frame_12
+    originalName: 
+    pivot: {x: 0.5625, y: 0.5}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 46
+      y: 142
+      width: 16
+      height: 16
+    spriteID: f37f83dcb4c2d9b4f9d75849088ff125
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 46, y: 142}
+  - name: Burrito_Frame_13
+    originalName: 
+    pivot: {x: 0.61538464, y: 0.47058824}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 111
+      y: 110
+      width: 13
+      height: 17
+    spriteID: 47e3431ca32c5894fbe27b4beb92bbf7
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 111, y: 110}
+  - name: Burrito_Frame_14
+    originalName: 
+    pivot: {x: 0.5833334, y: 0.4666667}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 110
+      y: 75
+      width: 12
+      height: 15
+    spriteID: d656a866087cc374fbbe443bfc504091
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 110, y: 75}
+  spriteSheetImportData: []
+  asepriteLayers:
+  - layerIndex: 0
+    guid: -592098675
+    name: Burrito
+    layerFlags: 0
+    layerType: 0
+    blendMode: 0
+    cells:
+    - name: Burrito_Frame_0
+      frameIndex: 0
+      cellRect:
+        x: 55
+        y: 60
+        width: 18
+        height: 10
+      spriteId: d019c7df1dcb9b44c91af181a17dad71
+    - name: Burrito_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 55
+        y: 59
+        width: 17
+        height: 11
+      spriteId: bca5ae62c0c29f841994646008e91f93
+    - name: Burrito_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 30
+        y: 28
+        width: 63
+        height: 78
+      spriteId: 558994cbb96f801448a8764b3702643c
+    - name: Burrito_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 43
+        y: 44
+        width: 42
+        height: 44
+      spriteId: 11f370715db7b2a4c8ca278fa21cd6ab
+    - name: Burrito_Frame_4
+      frameIndex: 4
+      cellRect:
+        x: 46
+        y: 47
+        width: 34
+        height: 37
+      spriteId: be4f5ae5ca7adae4c8af8cdef8ea3e87
+    - name: Burrito_Frame_5
+      frameIndex: 5
+      cellRect:
+        x: 49
+        y: 46
+        width: 30
+        height: 38
+      spriteId: e28374fc6e84fa144a468eca222f4faf
+    - name: Burrito_Frame_6
+      frameIndex: 6
+      cellRect:
+        x: 49
+        y: 50
+        width: 30
+        height: 29
+      spriteId: b450e8476aeec8143b7b626927430d1f
+    - name: Burrito_Frame_7
+      frameIndex: 7
+      cellRect:
+        x: 49
+        y: 52
+        width: 30
+        height: 26
+      spriteId: b8847238566cd5c419d22c2c82c43d60
+    - name: Burrito_Frame_8
+      frameIndex: 8
+      cellRect:
+        x: 50
+        y: 51
+        width: 27
+        height: 27
+      spriteId: cae049cf2f6da3d4cab6762ddcab7990
+    - name: Burrito_Frame_9
+      frameIndex: 9
+      cellRect:
+        x: 49
+        y: 53
+        width: 28
+        height: 23
+      spriteId: 91e3adb7f3ce5a8479b82cde4ca27edd
+    - name: Burrito_Frame_10
+      frameIndex: 10
+      cellRect:
+        x: 50
+        y: 54
+        width: 26
+        height: 22
+      spriteId: ea2162f9f1ff2cb49af695829d6f545f
+    - name: Burrito_Frame_11
+      frameIndex: 11
+      cellRect:
+        x: 54
+        y: 56
+        width: 20
+        height: 19
+      spriteId: ac84cb7f84510b84abf99d4f97f408dd
+    - name: Burrito_Frame_12
+      frameIndex: 12
+      cellRect:
+        x: 55
+        y: 56
+        width: 16
+        height: 16
+      spriteId: f37f83dcb4c2d9b4f9d75849088ff125
+    - name: Burrito_Frame_13
+      frameIndex: 13
+      cellRect:
+        x: 56
+        y: 56
+        width: 13
+        height: 17
+      spriteId: 47e3431ca32c5894fbe27b4beb92bbf7
+    - name: Burrito_Frame_14
+      frameIndex: 14
+      cellRect:
+        x: 57
+        y: 57
+        width: 12
+        height: 15
+      spriteId: d656a866087cc374fbbe443bfc504091
+    linkedCells: []
+    parentIndex: -1
+  platformSettings:
+  - name: DefaultTexturePlatform
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Standalone
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  generatePhysicsShape: 0
+  secondarySpriteTextures: []
+  spritePackingTag: 
+  canvasSize: {x: 128, y: 128}

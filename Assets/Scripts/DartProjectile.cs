@@ -13,6 +13,7 @@ public class DartProjectile : MonoBehaviour
     {
         // Destroy the projectile after lifetime seconds
         Destroy(gameObject, lifetime);
+        
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -26,7 +27,7 @@ public class DartProjectile : MonoBehaviour
             other.GetComponent<DamageFlash>().Flash();
             Destroy(gameObject,.2f);
         }
-        else
+        else if (other.CompareTag("Environment") || other.CompareTag("Enemy"))
         {
             //Debug.Log("Wall Hit!");
             Destroy(gameObject,.2f);

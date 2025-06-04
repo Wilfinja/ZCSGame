@@ -79,7 +79,7 @@ public class ThrowableItem : MonoBehaviour
 
     IEnumerator ReactivateRB()
     {
-        yield return new WaitForSeconds(.19f);
+        yield return new WaitForSeconds(.25f);
         bounce.enabled = true;
     }
 

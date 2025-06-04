@@ -301,5 +301,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 1
-  damageAmount: 5
+  damageAmount: 10
   hitCollider: {fileID: 3947287659950350886}

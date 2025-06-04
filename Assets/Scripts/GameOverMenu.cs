@@ -33,6 +33,7 @@ public class GameOverMenu : MonoBehaviour
         gameOverMenuUI.SetActive(true);
         gameIsPaused = true;
         Time.timeScale = .5f;
+        player = GameObject.FindGameObjectWithTag("Player");
         player.GetComponent<ClickToMove>().enabled = false;
         player.GetComponent<LookAtCursor>().enabled = false;
         player.GetComponent<PlayerInput>().enabled = false;
@@ -46,8 +47,14 @@ public class GameOverMenu : MonoBehaviour
         //Save on exit here?
 
         PersistantObjDestroyer.Instance.DestroyAllPersistentObjects();
+
+        gameManager = GameObject.Find("GameManager");
         Destroy(gameManager);
+
+        player = GameObject.FindGameObjectWithTag("Player");
         Destroy(player);
+
+        gameCamera = GameObject.FindGameObjectWithTag("MainCamera");
         Destroy(gameCamera);
     }
 
@@ -62,10 +69,14 @@ public class GameOverMenu : MonoBehaviour
         Scene currentScene = SceneManager.GetActiveScene();
 
         PersistantObjDestroyer.Instance.DestroyAllPersistentObjects();
+        gameManager = GameObject.Find("GameManager");
         Destroy(gameManager);
 
+        player = GameObject.FindGameObjectWithTag("Player");
         player.GetComponent<PlayerStats>().PauseRegen();
         Destroy(player);
+
+        gameCamera = GameObject.FindGameObjectWithTag("MainCamera");
         Destroy(gameCamera);
 
         SceneManager.LoadScene(currentScene.buildIndex);

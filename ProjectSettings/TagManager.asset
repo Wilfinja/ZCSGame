@@ -8,6 +8,8 @@ TagManager:
   - GameOverScreen
   - Spawned
   - Key
+  - Enemy
+  - Environment
   layers:
   - Default
   - TransparentFX
