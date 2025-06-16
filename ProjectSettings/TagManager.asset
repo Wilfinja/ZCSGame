@@ -10,6 +10,8 @@ TagManager:
   - Key
   - Enemy
   - Environment
+  - Plate
+  - Throw
   layers:
   - Default
   - TransparentFX

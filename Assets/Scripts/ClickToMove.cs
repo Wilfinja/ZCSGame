@@ -156,12 +156,30 @@ public class ClickToMove : MonoBehaviour
         // If we have a held item, throw it
         if (heldItem != null)
         {
-            // Calculate throw direction (towards mouse position)
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 throwDirection = (mousePosition - (Vector2)transform.position).normalized;
+            // Get mouse position as percentage of screen
+            Vector2 mouseScreenPercent = new Vector2(
+                Input.mousePosition.x / Screen.width,
+                Input.mousePosition.y / Screen.height
+            );
 
-            heldItem.Throw(throwDirection);
-            heldItem = null; // Clear the held item reference
+            // Convert to world coordinates using camera bounds
+            Camera cam = Camera.main;
+            float camHeight = cam.orthographicSize * 2f;
+            float camWidth = camHeight * cam.aspect;
+
+            Vector3 camPos = cam.transform.position;
+            Vector2 mouseWorldPos = new Vector2(
+                camPos.x + (mouseScreenPercent.x - 0.5f) * camWidth,
+                camPos.y + (mouseScreenPercent.y - 0.5f) * camHeight
+            );
+
+            Vector2 throwPos = GameObject.FindGameObjectWithTag("Throw").transform.position;
+            Vector2 direction = (mouseWorldPos - throwPos).normalized;
+
+            Debug.Log($"Alternative method direction: {direction}");
+
+            heldItem.Throw(direction);
+            heldItem = null;
         }
     }
 
@@ -175,5 +193,24 @@ public class ClickToMove : MonoBehaviour
     public ThrowableItem GetHeldItem()
     {
         return heldItem;
+    }
+
+    public void TestPureDown()
+    {
+        if (heldItem != null)
+        {
+            Vector2 pureDown = new Vector2(0f, -1f); // Perfectly straight down
+            Debug.Log($"Test Pure Down Direction: {pureDown}");
+            heldItem.Throw(pureDown);
+            heldItem = null;
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            TestPureDown();
+        }
     }
 }

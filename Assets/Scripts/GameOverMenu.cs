@@ -79,6 +79,8 @@ public class GameOverMenu : MonoBehaviour
         gameCamera = GameObject.FindGameObjectWithTag("MainCamera");
         Destroy(gameCamera);
 
+
+
         SceneManager.LoadScene(currentScene.buildIndex);
     }
 

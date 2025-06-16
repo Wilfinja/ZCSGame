@@ -25,6 +25,8 @@ public class ThrowableItem : MonoBehaviour
     private bool isHeld = false;
     private SpriteRenderer spriteRenderer;
 
+    private bool isMonitoring = false;
+
     private void Awake()
     {
         // Set willEat based on the eatable enum value right at the start
@@ -60,6 +62,7 @@ public class ThrowableItem : MonoBehaviour
     {
         bounce.enabled = false;
         isHeld = true;
+        
         rb.isKinematic = true;
         transform.SetParent(holder);
         transform.localPosition = Vector3.zero;
@@ -73,13 +76,24 @@ public class ThrowableItem : MonoBehaviour
         isHeld = false;
         transform.SetParent(null);
         rb.isKinematic = false;
+        transform.position = GameObject.FindGameObjectWithTag("Throw").transform.position;
+
+        // Clear any existing velocity
+        rb.velocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+
+        Debug.Log($"About to apply force: {throwDirection * throwForce}");
         rb.AddForce(throwDirection * throwForce, ForceMode2D.Impulse);
-        rb.AddTorque(torqueForce, ForceMode2D.Impulse);
+
+        // Start monitoring velocity
+        isMonitoring = true;
+        StartCoroutine(MonitorVelocity());
+        //rb.AddTorque(torqueForce, ForceMode2D.Impulse);
     }
 
     IEnumerator ReactivateRB()
     {
-        yield return new WaitForSeconds(.25f);
+        yield return new WaitForSeconds(.01f);
         bounce.enabled = true;
     }
 
@@ -107,6 +121,36 @@ public class ThrowableItem : MonoBehaviour
             {
                 spriteRenderer.color = Color.white;
             }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        isMonitoring = false; // Stop monitoring when it hits something
+        if (!isHeld)
+        {
+            //Debug.Log($"Item collided with: {collision.gameObject.name} at velocity: {rb.velocity}");
+        }
+    }
+
+    void Update()
+    {
+        if (!isHeld && rb != null && !rb.isKinematic)
+        {
+            //Debug.Log($"Item velocity: {rb.velocity}");
+        }
+    }
+
+    private IEnumerator MonitorVelocity()
+    {
+        while (isMonitoring && rb != null)
+        {
+            if (Mathf.Abs(rb.velocity.x) > 0.01f) // If horizontal velocity appears
+            {
+                //Debug.Log($"Horizontal velocity detected! Velocity: {rb.velocity}, Position: {transform.position}");
+                //Debug.Log($"All forces acting on object: Check for other scripts or physics interactions!");
+            }
+            yield return new WaitForFixedUpdate();
         }
     }
 }
