@@ -73,7 +73,7 @@ public class GameOverMenu : MonoBehaviour
         Destroy(gameManager);
 
         player = GameObject.FindGameObjectWithTag("Player");
-        player.GetComponent<PlayerStats>().PauseRegen();
+        //player.GetComponent<PlayerStats>().PauseRegen();
         Destroy(player);
 
         gameCamera = GameObject.FindGameObjectWithTag("MainCamera");

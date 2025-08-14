@@ -82,7 +82,7 @@ public class ThrowableItem : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0f;
 
-        Debug.Log($"About to apply force: {throwDirection * throwForce}");
+        //Debug.Log($"About to apply force: {throwDirection * throwForce}");
         rb.AddForce(throwDirection * throwForce, ForceMode2D.Impulse);
 
         // Start monitoring velocity

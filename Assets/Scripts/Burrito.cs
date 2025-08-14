@@ -25,6 +25,8 @@ public class Burrito : MonoBehaviour
 
     private bool hasExploded = false;
 
+    public GameObject plateLevelEnd;
+
     void Start()
     {
         timer = totalTime;
@@ -176,6 +178,10 @@ public class Burrito : MonoBehaviour
             sr.color = normalColor;
             StopAllCoroutines();
             isBlinking = false; // Reset blinking state
+
+            plateLevelEnd = GameObject.FindGameObjectWithTag("Plate");
+            plateLevelEnd.GetComponent<PlateLevelEnd>().Plated();
+
             transform.position = other.transform.position;
             Destroy(rb);
             ThrowableItem item = gameObject.GetComponent<ThrowableItem>();

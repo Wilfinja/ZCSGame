@@ -41,8 +41,9 @@ public class PlayerStats : MonoBehaviour
         GameOverScreen = GameObject.Find("GameOverScreen");
         GameOverScreen.SetActive(false);
 
-        pauseMenu = GameObject.Find("PauseMenu");
-        pauseMenu.SetActive(false);
+        pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
+        gameObject.GetComponent<PauseMenu>().pauseMenuUI = pauseMenu;
+        //pauseMenu.SetActive(false);
 
         if (Instance == null)
         {
@@ -60,10 +61,10 @@ public class PlayerStats : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        pauseMenu = GameObject.Find("PauseMenu");
+        gameObject.GetComponent<PauseMenu>().pauseMenuUI = pauseMenu;
 
-
-
-
+        pauseMenu.SetActive(false);
         //GameOverScreen = GameObject.FindGameObjectWithTag("GameOverScreen");
     }
 
@@ -81,6 +82,8 @@ public class PlayerStats : MonoBehaviour
 
     private void Update()
     {
+
+
         dragLevel = (int)rb.drag;
         dragBar.SetDrag(dragLevel);
 
@@ -103,7 +106,10 @@ public class PlayerStats : MonoBehaviour
 
     public void PauseRegen()
     {
-        pauseMenu.SetActive(true );
+
+        //gameObject.GetComponent<PauseMenu>().pauseMenuUI = pauseMenu;
+
+        pauseMenu.SetActive(true);
     }
 
 }

@@ -12,6 +12,8 @@ TagManager:
   - Environment
   - Plate
   - Throw
+  - LevelEnd
+  - PauseMenu
   layers:
   - Default
   - TransparentFX
