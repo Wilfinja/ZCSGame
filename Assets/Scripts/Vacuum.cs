@@ -44,6 +44,8 @@ public class Vacuum : MonoBehaviour
 
     private Animator animator;
 
+    public int damageAmount = 5;
+
     private void Start()
     {
         slowedPlayer = false;
@@ -80,9 +82,7 @@ public class Vacuum : MonoBehaviour
     {
         canSeePlayer = CheckLineOfSight();
 
-        bool foundItem = FindNearestItem();
-
-        // Second priority: Chase player if not slowed and can see player
+        // First priority: Chase player if not slowed and can see player
         if (!slowedPlayer && canSeePlayer && eatFinished)
         {
             navMeshAgent.isStopped = false;
@@ -179,56 +179,22 @@ public class Vacuum : MonoBehaviour
         }
     }
 
-    private bool FindNearestItem()
-    {
-        // Find all throwable items in the scene
-        ThrowableItem[] items = FindObjectsOfType<ThrowableItem>();
-
-        // Use itemChaseRadius instead of chaseRadius for items
-        float closestDistance = itemChaseRadius;
-        ThrowableItem closestItem = null;
-
-        foreach (ThrowableItem item in items)
-        {
-            // Skip items that are held by player or items that dog won't eat
-            if (item.transform.parent != null || !item.willEat)
-            {
-                continue;
-            }
-
-            float distance = Vector2.Distance(transform.position, item.transform.position);
-            if (distance < closestDistance)
-            {
-                closestItem = item;
-                closestDistance = distance;
-            }
-        }
-
-        // Update the current target
-        currentTarget = closestItem;
-
-        // Return true if we found an item
-        return currentTarget != null;
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Slow down player when touched
+        // Steal object from player when touched else deal damage
         ClickToMove player = collision.gameObject.GetComponent<ClickToMove>();
+        PlayerStats other = collision.gameObject.GetComponent<PlayerStats>();
         if (player != null)
         {
-            player.BeginSlow(slowAmount);
-            slowedPlayer = true;
-            StartCoroutine(ChaseTimer());
-        }
+            if (player.heldItem != null)
+            {
 
-        // Check if collided with the item being chased
-        ThrowableItem item = collision.gameObject.GetComponent<ThrowableItem>();
-        if (item != null && item == currentTarget && item.willEat)
-        {
-            Destroy(item.gameObject);
-            StartCoroutine(EatCheese());
-            currentTarget = null;
+            }
+            else
+            {
+                other.GetComponent<PlayerStats>().TakeDamage(damageAmount / 2);
+                other.GetComponent<DamageFlash>().Flash();
+            }
         }
     }
 

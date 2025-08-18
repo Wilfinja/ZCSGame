@@ -27,7 +27,7 @@ public class ClickToMove : MonoBehaviour
     public float minVelocityThreshold = 0.1f;
 
     public Transform itemHold;
-    private ThrowableItem heldItem; // Track the currently held item
+    public ThrowableItem heldItem; // Track the currently held item
 
     public static ClickToMove Instance { get; private set; }
 
