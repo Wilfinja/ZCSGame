@@ -29,6 +29,9 @@ public class PhysicsKeyDoor : MonoBehaviour
     [Tooltip("Sound to play when locked door is hit")]
     public AudioClip lockedSound;
 
+    [Tooltip("Sound to play when door is opened")]
+    public AudioClip openSound;
+
     // Private variables
     private bool isLocked = true;
     private float initialRotationZ;
@@ -41,44 +44,47 @@ public class PhysicsKeyDoor : MonoBehaviour
 
     void Start()
     {
-        // Store initial rotation first
-        initialRotationZ = transform.rotation.eulerAngles.z;
-
-        // Get collider
-        doorCollider = GetComponent<Collider2D>();
-        if (doorCollider == null)
-        {
-            Debug.LogError("PhysicsKeyDoor requires a Collider2D component!");
-        }
-
-        // Get or add Rigidbody2D but keep it completely inactive when locked
+        // Get or add needed components
         rb = GetComponent<Rigidbody2D>();
         if (rb == null)
         {
             rb = gameObject.AddComponent<Rigidbody2D>();
+            rb.gravityScale = 0;
+            rb.mass = 2f;
+            rb.drag = 2f;        // Increased drag to reduce excessive spinning
+            rb.angularDrag = 5f; // Increased angular drag to prevent wild spinning
         }
 
-        // Completely disable rigidbody when locked
-        rb.bodyType = RigidbodyType2D.Kinematic; // Use Kinematic instead of Static
-        rb.gravityScale = 0;
-        rb.mass = 2f;
-        rb.drag = 2f;
-        rb.angularDrag = 5f;
-        rb.velocity = Vector2.zero;
-        rb.angularVelocity = 0;
+        // Store initial rotation
+        initialRotationZ = transform.rotation.eulerAngles.z;
 
-        // Setup hinge joint but keep it completely disabled
+        // Setup hinge joint
         hinge = GetComponent<HingeJoint2D>();
-        if (hinge != null)
+        if (hinge == null)
         {
-            // If hinge exists, destroy it initially - we'll recreate it when needed
-            DestroyImmediate(hinge);
-            hinge = null;
+            hinge = gameObject.AddComponent<HingeJoint2D>();
+            hinge.connectedBody = null; // Connect to world
+            hinge.anchor = new Vector2(-0.5f, 0); // Position at left edge of door
+
+            // Disable joint limits initially - we'll handle them manually
+            hinge.useLimits = false;
+            hinge.useMotor = false;
+
+            // Configure spring to bring door back to center
+            JointSuspension2D spring = new JointSuspension2D();
+            spring.dampingRatio = springDamping;  // Damping to reduce bouncing
+            spring.frequency = springFrequency;   // Spring frequency
+            spring.angle = 0f;                   // Target angle (closed position)
+            //hinge.suspension = spring;
+            //hinge.useSpring = true;
         }
+
+        // Lock the door at start
+        rb.bodyType = RigidbodyType2D.Static;
 
         // Get or add AudioSource component
         audioSource = GetComponent<AudioSource>();
-        if (audioSource == null && (unlockSound != null || doorStopSound != null || lockedSound != null))
+        if (audioSource == null && (openSound != null || doorStopSound != null))
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }

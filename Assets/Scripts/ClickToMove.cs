@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class ClickToMove : MonoBehaviour
@@ -15,6 +14,8 @@ public class ClickToMove : MonoBehaviour
 
     private bool pullDisabled;
     private bool pushDisabled;
+
+    public bool pausePush;
 
     public float pushCooldown;
     public float pullCooldown;
@@ -45,6 +46,7 @@ public class ClickToMove : MonoBehaviour
 
         pullDisabled = false;
         pushDisabled = false;
+        pausePush = false;
 
         pushCooldown = .5f;
         pullCooldown = .25f;
@@ -62,7 +64,7 @@ public class ClickToMove : MonoBehaviour
 
     public void Push()
     {
-        if (!pushDisabled)
+        if (!pushDisabled && !pausePush)
         {
             //Debug.Log("Pushed");
 
@@ -82,7 +84,7 @@ public class ClickToMove : MonoBehaviour
 
     public void Pull()
     {
-        if (!pullDisabled)
+        if (!pullDisabled && !pausePush)
         {
             //Debug.Log("Pulled");
 
@@ -176,7 +178,7 @@ public class ClickToMove : MonoBehaviour
             Vector2 throwPos = GameObject.FindGameObjectWithTag("Throw").transform.position;
             Vector2 direction = (mouseWorldPos - throwPos).normalized;
 
-            Debug.Log($"Alternative method direction: {direction}");
+            //Debug.Log($"Alternative method direction: {direction}");
 
             heldItem.Throw(direction);
             heldItem = null;
@@ -193,24 +195,5 @@ public class ClickToMove : MonoBehaviour
     public ThrowableItem GetHeldItem()
     {
         return heldItem;
-    }
-
-    public void TestPureDown()
-    {
-        if (heldItem != null)
-        {
-            Vector2 pureDown = new Vector2(0f, -1f); // Perfectly straight down
-            Debug.Log($"Test Pure Down Direction: {pureDown}");
-            heldItem.Throw(pureDown);
-            heldItem = null;
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            TestPureDown();
-        }
     }
 }
