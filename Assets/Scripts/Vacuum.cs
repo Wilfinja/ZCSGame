@@ -6,7 +6,6 @@ public class Vacuum : MonoBehaviour
 {
     [Header("Enemy Properties")]
     public float moveSpeed = 3f;
-    public float slowAmount = 0.5f;
     public float maxHealth = 3f;
 
     [Header("Chasing Properties")]
@@ -65,8 +64,6 @@ public class Vacuum : MonoBehaviour
 
         lasPosition = transform.position;
 
-        animator = GetComponent<Animator>();
-
         eatFinished = true;
 
         // Make sure NavMeshAgent speed matches our moveSpeed
@@ -88,10 +85,6 @@ public class Vacuum : MonoBehaviour
             navMeshAgent.isStopped = false;
             navMeshAgent.SetDestination(player.position);
 
-            if (animator != null)
-            {
-                animator.Play("Run");
-            }
         }
         // Otherwise: Stop moving (when slowed or eating)
         else
@@ -174,7 +167,6 @@ public class Vacuum : MonoBehaviour
         if (distance <= stopChaseDistance)
         {
             Destroy(currentTarget.gameObject);
-            StartCoroutine(EatCheese());
             currentTarget = null;
         }
     }
@@ -188,7 +180,7 @@ public class Vacuum : MonoBehaviour
         {
             if (player.heldItem != null)
             {
-
+                Destroy(player.heldItem);
             }
             else
             {

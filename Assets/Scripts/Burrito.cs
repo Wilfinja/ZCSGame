@@ -7,6 +7,10 @@ public class Burrito : MonoBehaviour
     public float totalTime = 8f; // Total time before explosion
     private float timer;
 
+    [Header("Countdown Display")]
+    public TextMesh countdownTextMesh; // 3D text for countdown
+    public float displayOffset = 1f; // How far above the burrito to show the countdown
+
     [Header("Blink Settings")]
     public Color normalColor = Color.white;
     public Color warningColor = Color.red;
@@ -31,8 +35,41 @@ public class Burrito : MonoBehaviour
     {
         timer = totalTime;
         sr = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();    
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+
+        // Create countdown TextMesh if not assigned
+        if (countdownTextMesh == null)
+        {
+            CreateCountdownTextMesh();
+        }
+
+        // Initially hide the countdown
+        if (countdownTextMesh != null)
+        {
+            countdownTextMesh.gameObject.SetActive(false);
+        }
+    }
+
+    private void CreateCountdownTextMesh()
+    {
+        // Create a 3D text object
+        GameObject textObj = new GameObject("CountdownText");
+        textObj.transform.SetParent(transform);
+        textObj.transform.localPosition = Vector3.up * displayOffset;
+
+        countdownTextMesh = textObj.AddComponent<TextMesh>();
+        countdownTextMesh.text = "8.0";
+        countdownTextMesh.fontSize = 20;
+        countdownTextMesh.color = Color.white;
+        countdownTextMesh.anchor = TextAnchor.MiddleCenter;
+        countdownTextMesh.alignment = TextAlignment.Center;
+
+        // Make the text face the camera
+        if (Camera.main != null)
+        {
+            textObj.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
+        }
     }
 
     private void OnDrawGizmosSelected()
@@ -43,7 +80,22 @@ public class Burrito : MonoBehaviour
 
     void Update()
     {
-        if (!isOnPlate && !isHeld) return;
+        if (!isOnPlate && !isHeld)
+        {
+            // Hide countdown when not active
+            if (countdownTextMesh != null)
+            {
+                countdownTextMesh.gameObject.SetActive(false);
+            }
+            return;
+        }
+
+        // Show countdown when active
+        if (countdownTextMesh != null && !isOnPlate)
+        {
+            countdownTextMesh.gameObject.SetActive(true);
+            UpdateCountdownDisplay();
+        }
 
         // Only start blinking if not already blinking
         if (!isBlinking && !isOnPlate)
@@ -56,6 +108,46 @@ public class Burrito : MonoBehaviour
         if (timer <= 0f && !isOnPlate)
         {
             Explode();
+        }
+    }
+
+    private void UpdateCountdownDisplay()
+    {
+        if (countdownTextMesh != null)
+        {
+            // Don't show negative numbers
+            if (timer <= 0f)
+            {
+                countdownTextMesh.gameObject.SetActive(false);
+                return;
+            }
+
+            // Format the timer to show one decimal place
+            countdownTextMesh.text = timer.ToString("F1");
+
+            // Change color based on time remaining
+            if (timer <= 2f)
+            {
+                countdownTextMesh.color = Color.red;
+            }
+            else if (timer <= 4f)
+            {
+                countdownTextMesh.color = Color.yellow;
+            }
+            else
+            {
+                countdownTextMesh.color = Color.white;
+            }
+
+            // Optional: Scale text based on urgency
+            float scale = timer <= 3f ? Mathf.Lerp(1.5f, 1f, timer / 3f) : 1f;
+            countdownTextMesh.transform.localScale = Vector3.one * scale;
+
+            // Keep text facing camera
+            if (Camera.main != null)
+            {
+                countdownTextMesh.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
+            }
         }
     }
 
@@ -81,6 +173,12 @@ public class Burrito : MonoBehaviour
     {
         if (hasExploded) return; // Prevent multiple explosions
         hasExploded = true;
+
+        // Hide countdown on explosion
+        if (countdownTextMesh != null)
+        {
+            countdownTextMesh.gameObject.SetActive(false);
+        }
 
         //Debug.Log("Burrito exploded!");
         animator.Play("Burrito_Clip");
@@ -151,13 +249,6 @@ public class Burrito : MonoBehaviour
                     Debug.Log($"Player took {explosionDamage} explosion damage!");
                 }
 
-                // Alternative: If you're using a different health system, replace above with:
-                // IDamageable damageable = hitCollider.GetComponent<IDamageable>();
-                // if (damageable != null)
-                // {
-                //     damageable.TakeDamage(explosionDamage);
-                // }
-
                 // Optional: Add knockback effect
                 Rigidbody2D playerRb = hitCollider.GetComponent<Rigidbody2D>();
                 if (playerRb != null)
@@ -170,7 +261,7 @@ public class Burrito : MonoBehaviour
         }
     }
 
-        private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Plate"))
         {
@@ -178,6 +269,12 @@ public class Burrito : MonoBehaviour
             sr.color = normalColor;
             StopAllCoroutines();
             isBlinking = false; // Reset blinking state
+
+            // Hide countdown when on plate
+            if (countdownTextMesh != null)
+            {
+                countdownTextMesh.gameObject.SetActive(false);
+            }
 
             plateLevelEnd = GameObject.FindGameObjectWithTag("Plate");
             plateLevelEnd.GetComponent<PlateLevelEnd>().Plated();
