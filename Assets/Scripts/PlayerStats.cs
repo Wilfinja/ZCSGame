@@ -84,7 +84,7 @@ public class PlayerStats : MonoBehaviour
     {
 
 
-        dragLevel = (int)rb.drag;
+        dragLevel = (int)rb.linearDamping;
         dragBar.SetDrag(dragLevel);
 
         if (health <= 0)

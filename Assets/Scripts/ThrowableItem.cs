@@ -79,7 +79,7 @@ public class ThrowableItem : MonoBehaviour
         transform.position = GameObject.FindGameObjectWithTag("Throw").transform.position;
 
         // Clear any existing velocity
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
 
         //Debug.Log($"About to apply force: {throwDirection * throwForce}");
@@ -145,7 +145,7 @@ public class ThrowableItem : MonoBehaviour
     {
         while (isMonitoring && rb != null)
         {
-            if (Mathf.Abs(rb.velocity.x) > 0.01f) // If horizontal velocity appears
+            if (Mathf.Abs(rb.linearVelocity.x) > 0.01f) // If horizontal velocity appears
             {
                 //Debug.Log($"Horizontal velocity detected! Velocity: {rb.velocity}, Position: {transform.position}");
                 //Debug.Log($"All forces acting on object: Check for other scripts or physics interactions!");

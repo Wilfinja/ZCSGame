@@ -196,4 +196,13 @@ public class ClickToMove : MonoBehaviour
     {
         return heldItem;
     }
+
+    public void DropHeldItem()
+    {
+        if (heldItem != null)
+        {
+            Destroy(heldItem.gameObject);
+            heldItem = null;
+        }
+    }
 }

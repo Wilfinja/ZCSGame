@@ -48,8 +48,8 @@ public class PhysicsDoor : MonoBehaviour
             rb = gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0;
             rb.mass = 2f;
-            rb.drag = 2f;        // Increased drag to reduce excessive spinning
-            rb.angularDrag = 5f; // Increased angular drag to prevent wild spinning
+            rb.linearDamping = 2f;        // Increased drag to reduce excessive spinning
+            rb.angularDamping = 5f; // Increased angular drag to prevent wild spinning
         }
 
         // Store initial rotation
@@ -190,7 +190,7 @@ public class PhysicsDoor : MonoBehaviour
     public void ResetDoor()
     {
         // Stop all movement
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0;
 
         // Reset rotation

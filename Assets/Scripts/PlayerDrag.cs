@@ -20,7 +20,7 @@ public class PlayerDrag : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         currentTargetDrag = normalDrag;
-        rb.drag = normalDrag;
+        rb.linearDamping = normalDrag;
     }
 
     public void SetHazardDrag(float newDrag, float transitionSpeed = -1f)
@@ -70,23 +70,23 @@ public class PlayerDrag : MonoBehaviour
 
     private System.Collections.IEnumerator TransitionDrag(float targetDrag, float speed)
     {
-        float startDrag = rb.drag;
+        float startDrag = rb.linearDamping;
         float elapsedTime = 0f;
 
         while (elapsedTime < 1f / speed)
         {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime * speed;
-            rb.drag = Mathf.Lerp(startDrag, targetDrag, t);
+            rb.linearDamping = Mathf.Lerp(startDrag, targetDrag, t);
             yield return null;
         }
 
-        rb.drag = targetDrag;
+        rb.linearDamping = targetDrag;
         dragTransitionCoroutine = null;
     }
 
     // Public methods for external access
-    public float GetCurrentDrag() => rb.drag;
+    public float GetCurrentDrag() => rb.linearDamping;
     public float GetNormalDrag() => normalDrag;
     public bool IsInHazard() => isInHazard;
     public int GetHazardCount() => hazardCount;
@@ -104,6 +104,6 @@ public class PlayerDrag : MonoBehaviour
             dragTransitionCoroutine = null;
         }
 
-        rb.drag = normalDrag;
+        rb.linearDamping = normalDrag;
     }
 }

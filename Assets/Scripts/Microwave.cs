@@ -22,7 +22,7 @@ public class Microwave : MonoBehaviour
         Rigidbody2D rb = burrito.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.velocity = new Vector2(launchForce, 0f); // Launch to the right
+            rb.linearVelocity = new Vector2(launchForce, 0f); // Launch to the right
         }
     }
 

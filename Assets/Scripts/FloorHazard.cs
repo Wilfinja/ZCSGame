@@ -56,11 +56,11 @@ public class FloorHazard : MonoBehaviour
                 // Apply new drag
                 if (setAbsoluteDrag)
                 {
-                    rb.drag = dragModifier;
+                    rb.linearDamping = dragModifier;
                 }
                 else
                 {
-                    rb.drag += dragModifier;
+                    rb.linearDamping += dragModifier;
                 }
             }
             else
@@ -69,7 +69,7 @@ public class FloorHazard : MonoBehaviour
                 DragMemory dragMemory = other.gameObject.GetComponent<DragMemory>();
                 if (dragMemory != null)
                 {
-                    rb.drag = dragMemory.originalDrag;
+                    rb.linearDamping = dragMemory.originalDrag;
                     Destroy(dragMemory);
                 }
             }

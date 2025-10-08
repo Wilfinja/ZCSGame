@@ -14,6 +14,9 @@ TagManager:
   - Throw
   - LevelEnd
   - PauseMenu
+  - RedKey
+  - BlueKey
+  - GreenKey
   layers:
   - Default
   - TransparentFX

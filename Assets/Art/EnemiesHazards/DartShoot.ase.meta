@@ -23,6 +23,7 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  importerVersion: 2
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
@@ -98,6 +99,8 @@ ScriptedImporter:
     generateAnimationClips: 1
     addSortingGroup: 1
     addShadowCasters: 0
+    generateIndividualEvents: 1
+    generateSpriteAtlas: 1
   asepriteImporterSettings:
     fileImportMode: 1
     importHiddenLayers: 0
@@ -111,6 +114,8 @@ ScriptedImporter:
     generateAnimationClips: 1
     addSortingGroup: 1
     addShadowCasters: 0
+    generateIndividualEvents: 1
+    generateSpriteAtlas: 1
   importFileNodeState: 1
   platformSettingsDirtyTick: 638774608800134097
   textureAssetName: 
@@ -120,6 +125,7 @@ ScriptedImporter:
     pivot: {x: 0, y: 0}
     alignment: 0
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 0
@@ -141,6 +147,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -161,6 +168,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -181,6 +189,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -201,6 +210,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -221,6 +231,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -241,6 +252,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -261,6 +273,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -281,6 +294,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 105
@@ -301,6 +315,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 105
@@ -321,6 +336,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 105
@@ -341,6 +357,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 105
@@ -361,6 +378,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 105
@@ -381,6 +399,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 105
@@ -401,6 +420,7 @@ ScriptedImporter:
     pivot: {x: 0.65591395, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 105
@@ -417,120 +437,140 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 105, y: 430}
   spriteSheetImportData: []
+  tileSetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: 2020259478
+    uuid:
+      value0: 1887517806
+      value1: 0
+      value2: 0
+      value3: 0
+    guid: 1887517806
     name: DartShoot
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: DartShoot_Frame_0
+    - name: Frame_0
       frameIndex: 0
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: 16b03553dcc634048a1a83faba1f7fb0
-    - name: DartShoot_Frame_1
+    - name: Frame_1
       frameIndex: 1
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: 293c139ad5c506c40bdba120ccd3f153
-    - name: DartShoot_Frame_2
+    - name: Frame_2
       frameIndex: 2
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: b7d317a7c5cc49d4f9b70434c9f76310
-    - name: DartShoot_Frame_3
+    - name: Frame_3
       frameIndex: 3
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: c0c28a2e1f3da944f9d17edd985a9abf
-    - name: DartShoot_Frame_4
+    - name: Frame_4
       frameIndex: 4
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: 82c5fdb824341ce4d921f292d21fdde1
-    - name: DartShoot_Frame_5
+    - name: Frame_5
       frameIndex: 5
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: 30c60d038cfa64e42b91b1696dd3f3aa
-    - name: DartShoot_Frame_6
+    - name: Frame_6
       frameIndex: 6
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: 3007b0eb9a242534ba65058e9ddac2d6
-    - name: DartShoot_Frame_7
+    - name: Frame_7
       frameIndex: 7
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: a851956c63a3e264881a71c3cbf9f981
-    - name: DartShoot_Frame_8
+    - name: Frame_8
       frameIndex: 8
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: 76b44874925f5d34f922449aae263ab7
-    - name: DartShoot_Frame_9
+    - name: Frame_9
       frameIndex: 9
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: 5effe599a73ad3a448ca3e33e4d105f3
-    - name: DartShoot_Frame_10
+    - name: Frame_10
       frameIndex: 10
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: e15e53f0b4703e242b17892ca43a3511
-    - name: DartShoot_Frame_11
+    - name: Frame_11
       frameIndex: 11
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: c3b1fe656183e034f997103450f61882
-    - name: DartShoot_Frame_12
+    - name: Frame_12
       frameIndex: 12
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 93
         height: 63
       spriteId: ef03d17e574550448a1658f4ce78d3da
-    - name: DartShoot_Frame_13
+    - name: Frame_13
       frameIndex: 13
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
@@ -538,7 +578,10 @@ ScriptedImporter:
         height: 63
       spriteId: b41c397dc99d0684d8d1b7255991db47
     linkedCells: []
+    tileCells: []
+    tileSetIndex: 0
     parentIndex: -1
+  tileSets: []
   platformSettings:
   - name: DefaultTexturePlatform
     overridden: 0
@@ -568,3 +611,4 @@ ScriptedImporter:
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 128, y: 64}
+  previousTextureSize: {x: 256, y: 512}

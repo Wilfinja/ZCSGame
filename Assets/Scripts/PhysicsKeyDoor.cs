@@ -51,8 +51,8 @@ public class PhysicsKeyDoor : MonoBehaviour
             rb = gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0;
             rb.mass = 2f;
-            rb.drag = 2f;        // Increased drag to reduce excessive spinning
-            rb.angularDrag = 5f; // Increased angular drag to prevent wild spinning
+            rb.linearDamping = 2f;        // Increased drag to reduce excessive spinning
+            rb.angularDamping = 5f; // Increased angular drag to prevent wild spinning
         }
 
         // Store initial rotation
@@ -139,7 +139,7 @@ public class PhysicsKeyDoor : MonoBehaviour
         {
             // Get the key's rigidbody to calculate collision velocity
             Rigidbody2D keyRb = other.GetComponent<Rigidbody2D>();
-            Vector2 keyVelocity = keyRb != null ? keyRb.velocity : Vector2.right; // Default direction if no rigidbody
+            Vector2 keyVelocity = keyRb != null ? keyRb.linearVelocity : Vector2.right; // Default direction if no rigidbody
 
             UnlockDoor(other.transform.position, keyVelocity);
 
@@ -212,7 +212,7 @@ public class PhysicsKeyDoor : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;
 
         // Clear any residual velocity
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0;
 
         // Apply initial unlock force based on impact
@@ -247,7 +247,7 @@ public class PhysicsKeyDoor : MonoBehaviour
         }
 
         // Stop all movement and reset to kinematic
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0;
         rb.bodyType = RigidbodyType2D.Kinematic;
 

@@ -33,6 +33,7 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  importerVersion: 2
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
@@ -108,6 +109,8 @@ ScriptedImporter:
     generateAnimationClips: 1
     addSortingGroup: 1
     addShadowCasters: 0
+    generateIndividualEvents: 1
+    generateSpriteAtlas: 1
   asepriteImporterSettings:
     fileImportMode: 1
     importHiddenLayers: 0
@@ -121,6 +124,8 @@ ScriptedImporter:
     generateAnimationClips: 1
     addSortingGroup: 1
     addShadowCasters: 0
+    generateIndividualEvents: 1
+    generateSpriteAtlas: 1
   importFileNodeState: 1
   platformSettingsDirtyTick: 638815138863076735
   textureAssetName: 
@@ -130,6 +135,7 @@ ScriptedImporter:
     pivot: {x: 0, y: 0}
     alignment: 0
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 0
@@ -151,6 +157,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.36956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 112
@@ -171,6 +178,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.42}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 170
@@ -191,6 +199,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.4339623}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 118
@@ -211,6 +220,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.45762712}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 66
@@ -231,6 +241,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.42}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -251,6 +262,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.36956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 166
@@ -271,6 +283,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.42}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 58
@@ -291,6 +304,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.35714287}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -311,6 +325,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.36956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -331,6 +346,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.36956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 58
@@ -351,6 +367,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.36956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 112
@@ -371,6 +388,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: 0.36956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 166
@@ -391,6 +409,7 @@ ScriptedImporter:
     pivot: {x: 0.5740741, y: 0.27868852}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -407,112 +426,131 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
   spriteSheetImportData: []
+  tileSetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -1432383288
+    uuid:
+      value0: 288493032
+      value1: 0
+      value2: 0
+      value3: 0
+    guid: 288493032
     name: MrHandsome
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: MrHandsome_Frame_0
+    - name: Frame_0
       frameIndex: 0
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 47
         width: 46
         height: 46
       spriteId: a24de797666f55a4f8c9cb98a5a8baeb
-    - name: MrHandsome_Frame_1
+    - name: Frame_1
       frameIndex: 1
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 43
         width: 46
         height: 50
       spriteId: 5a6fe3cc6f8a500439ee50f7b5a076b2
-    - name: MrHandsome_Frame_2
+    - name: Frame_2
       frameIndex: 2
+      additiveSortOrder: 0
       cellRect:
         x: 10
         y: 41
         width: 44
         height: 53
       spriteId: 546d51f82ee391b4f8a016cb69978f4d
-    - name: MrHandsome_Frame_3
+    - name: Frame_3
       frameIndex: 3
+      additiveSortOrder: 0
       cellRect:
         x: 10
         y: 37
         width: 44
         height: 59
       spriteId: 63e73bbf3c424a54c99f940b87a4bd86
-    - name: MrHandsome_Frame_4
+    - name: Frame_4
       frameIndex: 4
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 43
         width: 46
         height: 50
       spriteId: 6854a03491f381a42877c734478e2875
-    - name: MrHandsome_Frame_5
+    - name: Frame_5
       frameIndex: 5
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 47
         width: 46
         height: 46
       spriteId: 67b8cf40448afd64fb0054c26673c177
-    - name: MrHandsome_Frame_6
+    - name: Frame_6
       frameIndex: 6
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 43
         width: 46
         height: 50
       spriteId: 18ea52669a173824f99c025203f18acb
-    - name: MrHandsome_Frame_7
+    - name: Frame_7
       frameIndex: 7
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 49
         width: 46
         height: 42
       spriteId: 53123d47958479a4dad814c1f2df5ccc
-    - name: MrHandsome_Frame_8
+    - name: Frame_8
       frameIndex: 8
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 47
         width: 46
         height: 46
       spriteId: 1291bf102a838c941878a8422b043a2e
-    - name: MrHandsome_Frame_9
+    - name: Frame_9
       frameIndex: 9
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 47
         width: 46
         height: 46
       spriteId: fd034666a66028b448739fdd1db03253
-    - name: MrHandsome_Frame_11
+    - name: Frame_11
       frameIndex: 11
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 47
         width: 46
         height: 46
       spriteId: e215b52ec991b004994d6faa017c8bdf
-    - name: MrHandsome_Frame_13
+    - name: Frame_13
       frameIndex: 13
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 47
         width: 46
         height: 46
       spriteId: a8491458e4d6a9b42a8552be62f9d778
-    - name: MrHandsome_Frame_14
+    - name: Frame_14
       frameIndex: 14
+      additiveSortOrder: 0
       cellRect:
         x: 1
         y: 47
@@ -520,7 +558,10 @@ ScriptedImporter:
         height: 61
       spriteId: 2c67ae6220d03ce45913487b8a7a22c5
     linkedCells: []
+    tileCells: []
+    tileSetIndex: 0
     parentIndex: -1
+  tileSets: []
   platformSettings:
   - name: DefaultTexturePlatform
     overridden: 0
@@ -550,3 +591,4 @@ ScriptedImporter:
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 64, y: 128}
+  previousTextureSize: {x: 256, y: 256}

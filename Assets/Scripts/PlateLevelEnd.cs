@@ -5,12 +5,21 @@ using UnityEngine;
 public class PlateLevelEnd : MonoBehaviour
 {
     public GameObject levelEnd;
+    public GameObject keyObject;
 
     // Start is called before the first frame update
     void Start()
     {
-        levelEnd = GameObject.FindGameObjectWithTag("LevelEnd");
-        levelEnd.SetActive(false);
+        if (levelEnd != null)
+        {
+            levelEnd = GameObject.FindGameObjectWithTag("LevelEnd");
+            levelEnd.SetActive(false);
+        }
+            
+        if (keyObject != null)
+        {
+            keyObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -21,6 +30,14 @@ public class PlateLevelEnd : MonoBehaviour
 
     public void Plated()
     {
-        levelEnd.SetActive(true);
+        if (levelEnd != null)
+        {
+            levelEnd.SetActive(true);
+        }
+
+        if (keyObject != null)
+        {
+            keyObject.SetActive(true);
+        }
     }
 }

@@ -12,6 +12,7 @@ public class Vacuum : MonoBehaviour
     public float chaseRadius = 10f;
     public float stopChaseDistance = 0.5f;
     public float itemChaseRadius = 15f; // This is bigger than regular chase radius
+    public float homeStopDistance = .5f; // Distance to stop when reaching home
 
     [Header("Item Drop")]
     public GameObject droppedItemPrefab;
@@ -45,6 +46,12 @@ public class Vacuum : MonoBehaviour
 
     public int damageAmount = 5;
 
+    public Transform home;
+
+    // Debug variables
+    private string currentState = "";
+    public bool showDebugInfo = true;
+
     private void Start()
     {
         slowedPlayer = false;
@@ -69,9 +76,10 @@ public class Vacuum : MonoBehaviour
         // Make sure NavMeshAgent speed matches our moveSpeed
         navMeshAgent.speed = moveSpeed;
 
-        if (animator != null)
+        // Validate home position
+        if (home == null)
         {
-            animator.Play("Walk");
+            Debug.LogWarning($"{gameObject.name}: Home transform is not assigned!");
         }
     }
 
@@ -79,26 +87,103 @@ public class Vacuum : MonoBehaviour
     {
         canSeePlayer = CheckLineOfSight();
 
-        // First priority: Chase player if not slowed and can see player
+        // Priority 1: Chase player if not slowed, can see player, and finished eating
         if (!slowedPlayer && canSeePlayer && eatFinished)
         {
+            currentState = "Chasing Player";
             navMeshAgent.isStopped = false;
-            navMeshAgent.SetDestination(player.position);
 
+            // Validate path to player
+            if (SetDestinationSafe(player.position))
+            {
+                if (showDebugInfo) Debug.Log($"{gameObject.name}: Chasing player");
+            }
+            else
+            {
+                if (showDebugInfo) Debug.LogWarning($"{gameObject.name}: Cannot find path to player!");
+            }
         }
-        // Otherwise: Stop moving (when slowed or eating)
+        // Priority 2: Go home if can't see player and not at home
+        else if (!canSeePlayer && !IsAtHome() && eatFinished && home != null)
+        {
+            currentState = "Returning Home";
+            navMeshAgent.isStopped = false;
+
+            // Validate path to home
+            if (SetDestinationSafe(home.position))
+            {
+                if (showDebugInfo) Debug.Log($"{gameObject.name}: Returning home - Distance: {Vector2.Distance(transform.position, home.position):F2}");
+            }
+            else
+            {
+                if (showDebugInfo) Debug.LogWarning($"{gameObject.name}: Cannot find path to home! Home position: {home.position}");
+                // Try to move towards home using direct movement as fallback
+                MoveTowardsHomeDirect();
+            }
+        }
+        // Priority 3: Stop moving ONLY when slowed or eating (not when at home or idle)
+        else if (slowedPlayer || !eatFinished)
+        {
+            if (!eatFinished)
+                currentState = "Eating";
+            else if (slowedPlayer)
+                currentState = "Slowed";
+
+            navMeshAgent.isStopped = true;
+        }
+        // Priority 4: Idle state (at home or no target) - keep agent active but clear destination
         else
         {
-            navMeshAgent.isStopped = true;
+            if (IsAtHome())
+                currentState = "At Home";
+            else
+                currentState = "Idle";
 
-            if (animator != null)
-            {
-                animator.Play("Walk");
-            }
+            navMeshAgent.isStopped = false;
+            navMeshAgent.ResetPath(); // Clear current path but keep agent active
         }
 
         // Handle rotation based on movement direction
         UpdateRotation();
+
+        // Debug info
+        if (showDebugInfo && Time.frameCount % 60 == 0) // Log every second
+        {
+            Debug.Log($"{gameObject.name} - State: {currentState}, CanSeePlayer: {canSeePlayer}, IsAtHome: {IsAtHome()}, NavMeshAgent.hasPath: {navMeshAgent.hasPath}");
+        }
+    }
+
+    private bool SetDestinationSafe(Vector3 destination)
+    {
+        // Check if the destination is on the NavMesh
+        UnityEngine.AI.NavMeshHit hit;
+        if (UnityEngine.AI.NavMesh.SamplePosition(destination, out hit, 1.0f, UnityEngine.AI.NavMesh.AllAreas))
+        {
+            return navMeshAgent.SetDestination(hit.position);
+        }
+        return false;
+    }
+
+    private void MoveTowardsHomeDirect()
+    {
+        // Fallback movement when NavMesh fails
+        if (home == null) return;
+
+        Vector2 direction = (home.position - transform.position).normalized;
+        transform.Translate(direction * moveSpeed * Time.deltaTime);
+
+        if (showDebugInfo)
+        {
+            Debug.Log($"{gameObject.name}: Using direct movement to home");
+        }
+    }
+
+    private bool IsAtHome()
+    {
+        if (home == null) return false;
+
+        float distanceToHome = Vector2.Distance(transform.position, home.position);
+        return distanceToHome <= homeStopDistance;
     }
 
     private void UpdateRotation()
@@ -158,49 +243,26 @@ public class Vacuum : MonoBehaviour
         return false;
     }
 
-    private void CheckItemChaseComplete()
-    {
-        if (currentTarget == null) return;
-
-        // Check if close enough to item
-        float distance = Vector2.Distance(transform.position, currentTarget.transform.position);
-        if (distance <= stopChaseDistance)
-        {
-            Destroy(currentTarget.gameObject);
-            currentTarget = null;
-        }
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Steal object from player when touched else deal damage
         ClickToMove player = collision.gameObject.GetComponent<ClickToMove>();
         PlayerStats other = collision.gameObject.GetComponent<PlayerStats>();
+
         if (player != null)
         {
-            if (player.heldItem != null)
+            if (player.IsHoldingItem())
             {
-                Destroy(player.heldItem);
+                player.DropHeldItem();
+                Debug.Log("Vacuum stole the player's item!");
             }
             else
             {
+                // No item to steal, deal damage instead
                 other.GetComponent<PlayerStats>().TakeDamage(damageAmount / 2);
                 other.GetComponent<DamageFlash>().Flash();
             }
         }
-    }
-
-    IEnumerator ChaseTimer()
-    {
-        yield return new WaitForSeconds(slowCooldown);
-        slowedPlayer = false;
-    }
-
-    IEnumerator EatCheese()
-    {
-        eatFinished = false;
-        yield return new WaitForSeconds(eatCooldown);
-        eatFinished = true;
     }
 
     private void OnDrawGizmos()
@@ -212,11 +274,34 @@ public class Vacuum : MonoBehaviour
         // Draw item chase radius (in a different color)
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, itemChaseRadius);
+
+        // Draw home stop distance (if home is assigned)
+        if (home != null)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(home.position, homeStopDistance);
+
+            // Draw line to home
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, home.position);
+        }
+
+        // Show current state as text
+        if (showDebugInfo)
+        {
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 2, currentState);
+        }
     }
 
     // Public method to check if player is visible
     public bool CanSeePlayer()
     {
         return canSeePlayer;
+    }
+
+    // Public method to check if vacuum is at home
+    public bool IsVacuumAtHome()
+    {
+        return IsAtHome();
     }
 }

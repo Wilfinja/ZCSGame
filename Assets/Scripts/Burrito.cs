@@ -1,14 +1,15 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class Burrito : MonoBehaviour
 {
     [Header("Explosion Timer")]
-    public float totalTime = 8f; // Total time before explosion
+    public float totalTime = 14f; // Total time before explosion
     private float timer;
 
     [Header("Countdown Display")]
-    public TextMesh countdownTextMesh; // 3D text for countdown
+    public TextMeshPro countdownTextMesh; // Changed from TextMesh to TextMeshPro
     public float displayOffset = 1f; // How far above the burrito to show the countdown
 
     [Header("Blink Settings")]
@@ -38,7 +39,7 @@ public class Burrito : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
 
-        // Create countdown TextMesh if not assigned
+        // Create countdown TextMeshPro if not assigned
         if (countdownTextMesh == null)
         {
             CreateCountdownTextMesh();
@@ -53,17 +54,23 @@ public class Burrito : MonoBehaviour
 
     private void CreateCountdownTextMesh()
     {
-        // Create a 3D text object
+        // Create a TextMeshPro object
         GameObject textObj = new GameObject("CountdownText");
         textObj.transform.SetParent(transform);
         textObj.transform.localPosition = Vector3.up * displayOffset;
 
-        countdownTextMesh = textObj.AddComponent<TextMesh>();
-        countdownTextMesh.text = "8.0";
-        countdownTextMesh.fontSize = 20;
-        countdownTextMesh.color = Color.white;
-        countdownTextMesh.anchor = TextAnchor.MiddleCenter;
-        countdownTextMesh.alignment = TextAlignment.Center;
+        countdownTextMesh = textObj.AddComponent<TextMeshPro>();
+        countdownTextMesh.text = "14.0";
+        countdownTextMesh.fontSize = 4; // TMP uses different sizing
+        countdownTextMesh.color = Color.blue;
+        countdownTextMesh.alignment = TextAlignmentOptions.Center;
+
+        // Set the font to be sharp
+        countdownTextMesh.fontSharedMaterial.shader = Shader.Find("TextMeshPro/Distance Field");
+
+        // Enable proper settings for crisp text
+        countdownTextMesh.enableAutoSizing = false;
+        countdownTextMesh.fontStyle = FontStyles.Bold; // Makes it more readable
 
         // Make the text face the camera
         if (Camera.main != null)
