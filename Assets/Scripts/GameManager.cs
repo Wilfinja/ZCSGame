@@ -26,8 +26,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        healthBar = FindObjectOfType<HealthBarScript>();
-        chairBar = FindObjectOfType<ChairBarScript>();
+        healthBar = FindFirstObjectByType<HealthBarScript>();
+        chairBar = FindFirstObjectByType<ChairBarScript>();
 
         if (Instance == null)
         {

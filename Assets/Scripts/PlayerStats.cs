@@ -32,11 +32,11 @@ public class PlayerStats : MonoBehaviour
 
     private void Awake()
     {
-        dragBar = FindObjectOfType<DragBarScript>();
+        dragBar = FindFirstObjectByType<DragBarScript>();
 
         //mainCanvas = GameObject.Find("Canvas");
 
-        gameOverMenu = FindObjectOfType<GameOverMenu>();
+        gameOverMenu = FindFirstObjectByType<GameOverMenu>();
 
         GameOverScreen = GameObject.Find("GameOverScreen");
         GameOverScreen.SetActive(false);

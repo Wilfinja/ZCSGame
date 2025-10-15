@@ -32,7 +32,7 @@ public class PhysicsDoor : MonoBehaviour
 
     // Private variables
     private bool isLocked = true;
-    private float currentAngle = 0f;
+    //private float currentAngle = 0f;
     private float initialRotationZ;
     private HingeJoint2D hinge;
     private Rigidbody2D rb;

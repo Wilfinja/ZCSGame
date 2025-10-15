@@ -65,7 +65,7 @@ public class Vacuum : MonoBehaviour
 
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
-        playerTarget = FindObjectOfType<ClickToMove>();
+        playerTarget = FindFirstObjectByType<ClickToMove>();
 
         player = playerTarget != null ? playerTarget.transform : null;
 

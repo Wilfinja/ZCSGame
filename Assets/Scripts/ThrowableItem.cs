@@ -13,7 +13,7 @@ public class ThrowableItem : MonoBehaviour
     [Header("Item Properties")]
     [SerializeField] private Eatable eatable = Eatable.Yes;
     [SerializeField] private float throwForce = 10f;
-    [SerializeField] private float torqueForce = 5f;
+    //[SerializeField] private float torqueForce = 5f;
 
     // This is the property that Dog.cs will check
     [HideInInspector] public bool willEat = true;
@@ -62,8 +62,8 @@ public class ThrowableItem : MonoBehaviour
     {
         bounce.enabled = false;
         isHeld = true;
-        
-        rb.isKinematic = true;
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
         transform.SetParent(holder);
         transform.localPosition = Vector3.zero;
     }
@@ -75,7 +75,7 @@ public class ThrowableItem : MonoBehaviour
         StartCoroutine(ReactivateRB());
         isHeld = false;
         transform.SetParent(null);
-        rb.isKinematic = false;
+        rb.bodyType = RigidbodyType2D.Dynamic;
         transform.position = GameObject.FindGameObjectWithTag("Throw").transform.position;
 
         // Clear any existing velocity
@@ -135,7 +135,7 @@ public class ThrowableItem : MonoBehaviour
 
     void Update()
     {
-        if (!isHeld && rb != null && !rb.isKinematic)
+        if (!isHeld && rb != null && rb.bodyType == RigidbodyType2D.Dynamic)
         {
             //Debug.Log($"Item velocity: {rb.velocity}");
         }

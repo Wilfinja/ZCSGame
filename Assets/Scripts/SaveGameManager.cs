@@ -204,7 +204,7 @@ public class SaveGameManager : MonoBehaviour
         }
 
         // Update drag
-        PlayerDrag playerDrag = FindObjectOfType<PlayerDrag>();
+        PlayerDrag playerDrag = FindFirstObjectByType<PlayerDrag>();
         if (playerDrag != null)
         {
             saveData.currentDrag = playerDrag.GetCurrentDrag();
@@ -267,7 +267,7 @@ public class SaveGameManager : MonoBehaviour
         }
 
         // Apply drag if not in hazard
-        PlayerDrag playerDrag = FindObjectOfType<PlayerDrag>();
+        PlayerDrag playerDrag = FindFirstObjectByType<PlayerDrag>();
         if (playerDrag != null && !playerDrag.IsInHazard())
         {
             Rigidbody2D rb = playerDrag.GetComponent<Rigidbody2D>();

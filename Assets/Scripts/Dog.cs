@@ -58,7 +58,7 @@ public class Dog : MonoBehaviour
 
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
-        playerTarget = FindObjectOfType<ClickToMove>();
+        playerTarget = FindFirstObjectByType<ClickToMove>();
 
         player = playerTarget != null ? playerTarget.transform : null;
 
@@ -206,7 +206,7 @@ public class Dog : MonoBehaviour
     private bool FindNearestItem()
     {
         // Find all throwable items in the scene
-        ThrowableItem[] items = FindObjectsOfType<ThrowableItem>();
+        ThrowableItem[] items = FindObjectsByType<ThrowableItem>(FindObjectsSortMode.None);
 
         // Use itemChaseRadius instead of chaseRadius for items
         float closestDistance = itemChaseRadius;
