@@ -98,13 +98,13 @@ public class SquirtGUn : MonoBehaviour
         }
 
         // Check for shoot input when held
-        if (isHeld && Input.GetKeyDown(shootKey))
+        if (isHeld)
         {
             Shoot();
         }
     }
 
-    private void Shoot()
+    public void Shoot()
     {
         if (currentAmmo > 0)
         {

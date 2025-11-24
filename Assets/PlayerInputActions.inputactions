@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "PlayerInputActions",
     "maps": [
         {
@@ -9,7 +10,7 @@
                     "name": "Push",
                     "type": "Button",
                     "id": "4f77aa05-d0ec-4a50-bb2a-8c6e188ede45",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -37,6 +38,15 @@
                     "type": "Button",
                     "id": "bb001a49-3efc-42aa-86c2-b415c27cbe09",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Squirt",
+                    "type": "Button",
+                    "id": "0bee465f-9224-45e8-8a7e-9ade85cc833c",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -95,6 +105,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8abae549-e0b1-4995-a46e-c9ea0b36d060",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Squirt",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
