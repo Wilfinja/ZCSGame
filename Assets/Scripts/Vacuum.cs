@@ -79,7 +79,7 @@ public class Vacuum : MonoBehaviour
         // Validate home position
         if (home == null)
         {
-            Debug.LogWarning($"{gameObject.name}: Home transform is not assigned!");
+            //Debug.LogWarning($"{gameObject.name}: Home transform is not assigned!");
         }
     }
 
@@ -96,11 +96,11 @@ public class Vacuum : MonoBehaviour
             // Validate path to player
             if (SetDestinationSafe(player.position))
             {
-                if (showDebugInfo) Debug.Log($"{gameObject.name}: Chasing player");
+                //if (showDebugInfo) Debug.Log($"{gameObject.name}: Chasing player");
             }
             else
             {
-                if (showDebugInfo) Debug.LogWarning($"{gameObject.name}: Cannot find path to player!");
+                //if (showDebugInfo) Debug.LogWarning($"{gameObject.name}: Cannot find path to player!");
             }
         }
         // Priority 2: Go home if can't see player and not at home
@@ -112,11 +112,11 @@ public class Vacuum : MonoBehaviour
             // Validate path to home
             if (SetDestinationSafe(home.position))
             {
-                if (showDebugInfo) Debug.Log($"{gameObject.name}: Returning home - Distance: {Vector2.Distance(transform.position, home.position):F2}");
+                //if (showDebugInfo) Debug.Log($"{gameObject.name}: Returning home - Distance: {Vector2.Distance(transform.position, home.position):F2}");
             }
             else
             {
-                if (showDebugInfo) Debug.LogWarning($"{gameObject.name}: Cannot find path to home! Home position: {home.position}");
+                //if (showDebugInfo) Debug.LogWarning($"{gameObject.name}: Cannot find path to home! Home position: {home.position}");
                 // Try to move towards home using direct movement as fallback
                 MoveTowardsHomeDirect();
             }
@@ -149,7 +149,7 @@ public class Vacuum : MonoBehaviour
         // Debug info
         if (showDebugInfo && Time.frameCount % 60 == 0) // Log every second
         {
-            Debug.Log($"{gameObject.name} - State: {currentState}, CanSeePlayer: {canSeePlayer}, IsAtHome: {IsAtHome()}, NavMeshAgent.hasPath: {navMeshAgent.hasPath}");
+            //Debug.Log($"{gameObject.name} - State: {currentState}, CanSeePlayer: {canSeePlayer}, IsAtHome: {IsAtHome()}, NavMeshAgent.hasPath: {navMeshAgent.hasPath}");
         }
     }
 
@@ -254,7 +254,7 @@ public class Vacuum : MonoBehaviour
             if (player.IsHoldingItem())
             {
                 player.DropHeldItem();
-                Debug.Log("Vacuum stole the player's item!");
+                //Debug.Log("Vacuum stole the player's item!");
             }
             else
             {

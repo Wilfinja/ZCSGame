@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -11,7 +12,6 @@ public class SquirtGUn : MonoBehaviour
     public GameObject waterProjectilePrefab;
     public Transform firePoint;
     public float projectileSpeed = 15f;
-    public KeyCode shootKey = KeyCode.Mouse0; // Left mouse button
 
     [Header("Ammo Display")]
     public TextMeshPro ammoTextMesh;
@@ -27,15 +27,22 @@ public class SquirtGUn : MonoBehaviour
     public Color lowAmmoColor = Color.yellow;
     public Color emptyAmmoColor = Color.red;
 
+    private bool shootDisabled;
+    private Animator anim;
     private bool isHeld = false;
     private Rigidbody2D rb;
     private Camera mainCamera;
+    private Transform mtransfrom;
 
     void Start()
     {
         currentAmmo = maxAmmo;
         rb = GetComponent<Rigidbody2D>();
         mainCamera = Camera.main;
+
+        mtransfrom = GetComponent<Transform>();
+
+        anim = GetComponent<Animator>();
 
         // Get or create AudioSource
         audioSource = GetComponent<AudioSource>();
@@ -97,29 +104,38 @@ public class SquirtGUn : MonoBehaviour
             }
         }
 
-        // Check for shoot input when held
         if (isHeld)
         {
-            Shoot();
+            LAMouse();
         }
+
+        // Check for shoot input when held
+        //if (isHeld)
+        //{
+        //    Shoot();
+        //}
     }
 
     public void Shoot()
     {
-        if (currentAmmo > 0)
+        if (currentAmmo > 0 && !shootDisabled && isHeld)
         {
+            shootDisabled = true;
+
             // Fire projectile
             if (waterProjectilePrefab != null && firePoint != null)
             {
                 // Get direction to mouse cursor
                 Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-                mousePos.z = 0f;
+                mousePos.z = 1f;
 
                 Vector2 shootDirection = (mousePos - firePoint.position).normalized;
                 float angle = Mathf.Atan2(shootDirection.y, shootDirection.x) * Mathf.Rad2Deg;
 
+                anim.Play("Fire");
+
                 // Instantiate projectile
-                GameObject projectile = Instantiate(waterProjectilePrefab, firePoint.position, Quaternion.Euler(0, 0, angle - 90));
+                GameObject projectile = Instantiate(waterProjectilePrefab, firePoint.position, Quaternion.Euler(0, 0, angle - 180));
 
                 // Add velocity to projectile
                 Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
@@ -140,9 +156,13 @@ public class SquirtGUn : MonoBehaviour
             }
 
             Debug.Log($"Squirt! Ammo remaining: {currentAmmo}");
+
+            StartCoroutine(wait());
         }
-        else
+        else if (!shootDisabled && isHeld)
         {
+            shootDisabled = true;
+
             // Empty gun - play click sound
             if (emptyClickSound != null && audioSource != null)
             {
@@ -150,7 +170,23 @@ public class SquirtGUn : MonoBehaviour
             }
 
             Debug.Log("Out of ammo! Need to refill at water cooler.");
+
+            StartCoroutine(wait());
         }
+        
+    }
+
+    private void LAMouse()
+    {
+        Vector3 mouseScreenPos = Input.mousePosition;
+        mouseScreenPos.z = Camera.main.transform.position.z; // Add this line
+
+        Vector2 direction = Camera.main.ScreenToWorldPoint(mouseScreenPos) - mtransfrom.position;
+
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion rotation = Quaternion.AngleAxis(angle + 90, Vector3.forward);
+        mtransfrom.rotation = rotation;
+
     }
 
     private void UpdateAmmoDisplay()
@@ -243,5 +279,11 @@ public class SquirtGUn : MonoBehaviour
     public int GetCurrentAmmo()
     {
         return currentAmmo;
+    }
+
+    private IEnumerator wait()
+    {
+        yield return new WaitForSeconds(.5f);
+        shootDisabled = false;
     }
 }

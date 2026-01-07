@@ -11,7 +11,7 @@ public class SquirtProjectile : MonoBehaviour
 
     private Animator animator;
 
-    void Start()
+    void Awake()
     {
         hitAnim.SetActive(false);
 
@@ -24,8 +24,9 @@ public class SquirtProjectile : MonoBehaviour
         if (other.CompareTag("Robot"))
         {
             // Deal damage and flash
-            other.GetComponent<EnemyStats>().TakeDamage(damageAmount / 2);
+            other.GetComponent<EnemyStats>().TakeDamage(damageAmount / 4);
             other.GetComponent<DamageFlash>().Flash();
+            hitCollider.enabled = false;
 
             // Play hit animation
             PlayHitAnimation();
@@ -33,13 +34,23 @@ public class SquirtProjectile : MonoBehaviour
             // Destroy projectile (but animation will survive)
             Destroy(gameObject, .2f);
         }
+        else if (other.CompareTag("Vacuum"))
+        {
+            other.GetComponent<VacuumShooter>().TakeDamage(damageAmount / 4);
+            other.GetComponent<DamageFlash>().Flash();
+            hitCollider.enabled = false;
+
+            PlayHitAnimation();
+
+            Destroy(gameObject, .05f);
+        }
         else if (other.CompareTag("Environment"))
         {
             // Play hit animation
             PlayHitAnimation();
 
             // Destroy projectile (but animation will survive)
-            Destroy(gameObject, .2f);
+            Destroy(gameObject, .05f);
         }
     }
 

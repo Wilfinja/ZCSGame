@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "SquirtGun",
+    "maps": [
+        {
+            "name": "Typical",
+            "id": "b46f9d23-1869-4c13-a6d6-cb075ebe11f0",
+            "actions": [
+                {
+                    "name": "Squirt",
+                    "type": "Button",
+                    "id": "d5568f97-616d-4b97-accd-eb6159d7e5e8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c680b140-eb03-4e84-9519-c49c43478800",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Squirt",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class VacuumShooter : MonoBehaviour
 {
     [Header("Enemy Properties")]
     public float moveSpeed = 3f;
-    public float maxHealth = 3f;
+    public float maxHealth = 15f;
 
     [Header("Chasing Properties")]
     public float chaseRadius = 10f;
@@ -58,13 +59,18 @@ public class VacuumShooter : MonoBehaviour
 
     public int damageAmount = 5;
 
+    private bool isdying;
+
     // Debug variables
     private string currentState = "";
     public bool showDebugInfo = true;
 
-    private void Start()
+    private void Awake()
     {
+        isdying = false;
         slowedPlayer = false;
+
+        currentHealth = maxHealth;
 
         // Get NavMeshAgent component from unity so we can call on it later
         navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
@@ -91,11 +97,11 @@ public class VacuumShooter : MonoBehaviour
         // Validate shooting setup
         if (projectilePrefab == null)
         {
-            Debug.LogWarning($"{gameObject.name}: Projectile prefab is not assigned!");
+            //Debug.LogWarning($"{gameObject.name}: Projectile prefab is not assigned!");
         }
         if (firePoint == null)
         {
-            Debug.LogWarning($"{gameObject.name}: Fire point is not assigned! Using enemy position as default.");
+            //Debug.LogWarning($"{gameObject.name}: Fire point is not assigned! Using enemy position as default.");
             // Create a default fire point as child
             GameObject fp = new GameObject("FirePoint");
             fp.transform.SetParent(transform);
@@ -106,6 +112,11 @@ public class VacuumShooter : MonoBehaviour
 
     private void Update()
     {
+        if(currentHealth < 0)
+        {
+            death();
+        }
+
         canSeePlayer = CheckPlayerWithinRadius();
         hasLineOfSightToPlayer = CheckLineOfSight();
         float distanceToPlayer = player != null ? Vector2.Distance(transform.position, player.position) : float.MaxValue;
@@ -126,11 +137,11 @@ public class VacuumShooter : MonoBehaviour
             // Validate path to player
             if (SetDestinationSafe(player.position))
             {
-                if (showDebugInfo) Debug.Log($"{gameObject.name}: Chasing player");
+                //if (showDebugInfo) Debug.Log($"{gameObject.name}: Chasing player");
             }
             else
             {
-                if (showDebugInfo) Debug.LogWarning($"{gameObject.name}: Cannot find path to player!");
+                //if (showDebugInfo) Debug.LogWarning($"{gameObject.name}: Cannot find path to player!");
             }
         }
         // Priority 2: Stop moving if slowed or eating
@@ -157,13 +168,13 @@ public class VacuumShooter : MonoBehaviour
         // Debug info
         if (showDebugInfo && Time.frameCount % 60 == 0) // Log every second
         {
-            Debug.Log($"{gameObject.name} - State: {currentState}, CanSeePlayer: {canSeePlayer}, HasLOS: {hasLineOfSightToPlayer}, NavMeshAgent.hasPath: {navMeshAgent.hasPath}");
+            //Debug.Log($"{gameObject.name} - State: {currentState}, CanSeePlayer: {canSeePlayer}, HasLOS: {hasLineOfSightToPlayer}, NavMeshAgent.hasPath: {navMeshAgent.hasPath}");
         }
     }
 
     private IEnumerator ShootAtPlayer()
     {
-        if (player == null || projectilePrefab == null || firePoint == null) yield break;
+        if (player == null || projectilePrefab == null || firePoint == null || isdying) yield break;
 
         firing = true;
 
@@ -232,7 +243,7 @@ public class VacuumShooter : MonoBehaviour
 
     private bool CheckPlayerWithinRadius()
     {
-        if (player == null) return false;
+        if (player == null || isdying) return false;
 
         // Check if player is within detection radius
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
@@ -241,7 +252,7 @@ public class VacuumShooter : MonoBehaviour
 
     private bool CheckLineOfSight()
     {
-        if (player == null) return false;
+        if (player == null || isdying) return false;
 
         // Check if player is within shooting range
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
@@ -322,5 +333,19 @@ public class VacuumShooter : MonoBehaviour
     public bool CanSeePlayer()
     {
         return canSeePlayer;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth = currentHealth - damage;
+    }
+
+    private void death()
+    {
+        isdying = true;
+
+        animator.Play("Death");
+
+        Destroy(gameObject, 1.5f);
     }
 }
