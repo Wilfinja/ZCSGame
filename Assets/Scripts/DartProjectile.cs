@@ -23,7 +23,7 @@ public class DartProjectile : MonoBehaviour
         {
             hitCollider.enabled = false;
             //Debug.Log("Player Hit!");
-            other.GetComponent<PlayerStats>().TakeDamage(damageAmount/2);
+            other.GetComponent<PlayerStats>().TakeDamage(damageAmount);
             other.GetComponent<DamageFlash>().Flash();
             Destroy(gameObject,.2f);
         }

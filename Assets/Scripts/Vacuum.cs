@@ -45,6 +45,8 @@ public class Vacuum : MonoBehaviour
     private Animator animator;
 
     public int damageAmount = 5;
+    public int damageCooldown = 2;
+    private bool hasDamaged;
 
     public Transform home;
 
@@ -55,6 +57,7 @@ public class Vacuum : MonoBehaviour
     private void Start()
     {
         slowedPlayer = false;
+        hasDamaged = false;
 
         // Get NavMeshAgent component from unity so we can call on it later
         navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
@@ -256,10 +259,12 @@ public class Vacuum : MonoBehaviour
                 player.DropHeldItem();
                 //Debug.Log("Vacuum stole the player's item!");
             }
-            else
+            else if (!hasDamaged)
             {
+                StartCoroutine(DamageCooldown());
+
                 // No item to steal, deal damage instead
-                other.GetComponent<PlayerStats>().TakeDamage(damageAmount / 2);
+                other.GetComponent<PlayerStats>().TakeDamage(damageAmount);
                 other.GetComponent<DamageFlash>().Flash();
             }
         }
@@ -303,5 +308,12 @@ public class Vacuum : MonoBehaviour
     public bool IsVacuumAtHome()
     {
         return IsAtHome();
+    }
+
+    IEnumerator DamageCooldown()
+    {
+        hasDamaged = true;
+        yield return new WaitForSeconds(damageCooldown);
+        hasDamaged = false;
     }
 }

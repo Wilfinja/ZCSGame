@@ -96,7 +96,7 @@ public class Mailcart : MonoBehaviour
             else
             {
                 // No item to steal, deal damage instead
-                other.GetComponent<PlayerStats>().TakeDamage(damageAmount / 2);
+                other.GetComponent<PlayerStats>().TakeDamage(damageAmount);
                 other.GetComponent<DamageFlash>().Flash();
             }
         }

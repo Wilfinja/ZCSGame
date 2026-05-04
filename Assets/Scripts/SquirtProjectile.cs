@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SquirtProjectile : MonoBehaviour
 {
@@ -24,7 +24,7 @@ public class SquirtProjectile : MonoBehaviour
         if (other.CompareTag("Robot"))
         {
             // Deal damage and flash
-            other.GetComponent<EnemyStats>().TakeDamage(damageAmount / 4);
+            other.GetComponent<EnemyStats>().TakeDamage(damageAmount);
             other.GetComponent<DamageFlash>().Flash();
             hitCollider.enabled = false;
 
@@ -34,9 +34,28 @@ public class SquirtProjectile : MonoBehaviour
             // Destroy projectile (but animation will survive)
             Destroy(gameObject, .2f);
         }
+        // ── Grabber robot support ────────────────────────────────────────
+        else if (other.CompareTag("Grabber"))
+        {
+            Grabberrobot grabber = other.GetComponent<Grabberrobot>();
+            if (grabber != null)
+            {
+                grabber.TakeDamage(damageAmount);
+            }
+
+            // DamageFlash is called inside GrabberRobot.TakeDamage, but call
+            // it here too as a fallback in case the component is missing
+            DamageFlash flash = other.GetComponent<DamageFlash>();
+            if (flash != null) flash.Flash();
+
+            hitCollider.enabled = false;
+            PlayHitAnimation();
+            Destroy(gameObject, .05f);
+        }
+        // ─────────────────────────────────────────────────────────────────────
         else if (other.CompareTag("Vacuum"))
         {
-            other.GetComponent<VacuumShooter>().TakeDamage(damageAmount / 4);
+            other.GetComponent<VacuumShooter>().TakeDamage(damageAmount);
             other.GetComponent<DamageFlash>().Flash();
             hitCollider.enabled = false;
 

@@ -20,6 +20,7 @@ TagManager:
   - WaterCooler
   - Robot
   - Vacuum
+  - Grabber
   layers:
   - Default
   - TransparentFX
@@ -57,8 +58,20 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 3016430995
+    locked: 0
+  - name: Ground
+    uniqueID: 1644783649
+    locked: 0
   - name: Enemies
     uniqueID: 2587001411
+    locked: 0
+  - name: Player
+    uniqueID: 3372511299
+    locked: 0
+  - name: UI
+    uniqueID: 3690284643
     locked: 0
   m_RenderingLayers:
   - Default
