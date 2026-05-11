@@ -1,12 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Drives the main menu. Handles new game, load game, and quit.
+/// Save slots are display-only here - you can load or delete but not save
+/// (there is nothing to save from the main menu).
+/// </summary>
 public class MainMenu : MonoBehaviour
 {
-    [Header("Basic Buttons")]
+    [Header("Core Buttons")]
     public Button newGameButton;
     public Button quitButton;
 
@@ -16,77 +19,113 @@ public class MainMenu : MonoBehaviour
     public Button showSaveSlotsButton;
     public Button hideSaveSlotsButton;
 
-    [Header("Confirmation Dialog")]
+    [Header("New Game Confirmation")]
     public GameObject newGameConfirmDialog;
     public Button confirmNewGameButton;
     public Button cancelNewGameButton;
 
+    [Header("First Scene")]
+    [Tooltip("Scene name to load for a brand new game.")]
+    public string firstSceneName = "Tutorial";
+
+    // -------------------------------------------------------------------------
     private void Start()
     {
-        SetupUI();
-        UpdateSaveSlotDisplays();
+        SetupButtons();
+        RefreshSlotDisplays();
+
+        if (saveSlotPanel != null) saveSlotPanel.SetActive(false);
+        if (newGameConfirmDialog != null) newGameConfirmDialog.SetActive(false);
     }
 
-    private void SetupUI()
+    private void SetupButtons()
     {
-        // Setup save slot buttons
+        if (newGameButton != null) newGameButton.onClick.AddListener(OnNewGameClicked);
+        if (quitButton != null) quitButton.onClick.AddListener(QuitGame);
+        if (showSaveSlotsButton != null) showSaveSlotsButton.onClick.AddListener(ShowSaveSlots);
+        if (hideSaveSlotsButton != null) hideSaveSlotsButton.onClick.AddListener(HideSaveSlots);
+
+        if (confirmNewGameButton != null) confirmNewGameButton.onClick.AddListener(ConfirmNewGame);
+        if (cancelNewGameButton != null) cancelNewGameButton.onClick.AddListener(CancelNewGame);
+
+        // Wire up each slot UI
+        for (int i = 0; i < saveSlotUIs.Length; i++)
+        {
+            if (saveSlotUIs[i] == null) continue;
+
+            saveSlotUIs[i].slotIndex = i;
+
+            // Disable save button - can't save from main menu
+            if (saveSlotUIs[i].saveButton != null)
+                saveSlotUIs[i].saveButton.gameObject.SetActive(false);
+
+            // Wire load and delete directly through SaveSlotUI's own methods
+            if (saveSlotUIs[i].loadButton != null)
+                saveSlotUIs[i].loadButton.onClick.AddListener(saveSlotUIs[i].OnLoadClicked);
+
+            if (saveSlotUIs[i].deleteButton != null)
+                saveSlotUIs[i].deleteButton.onClick.AddListener(() =>
+                {
+                    saveSlotUIs[i].OnDeleteClicked();
+                    RefreshSlotDisplays();
+                });
+        }
+    }
+
+    private void RefreshSlotDisplays()
+    {
+        if (SaveGameManager.Instance == null) return;
+
         for (int i = 0; i < saveSlotUIs.Length; i++)
         {
             if (saveSlotUIs[i] != null)
-            {
-                saveSlotUIs[i].slotIndex = i;
-
-                // Setup button listeners
-                int slotIndex = i; // Capture for closure
-
-                if (saveSlotUIs[i].loadButton != null)
-                    saveSlotUIs[i].loadButton.onClick.AddListener(() => LoadFromSlot(slotIndex));
-
-                if (saveSlotUIs[i].saveButton != null)
-                    saveSlotUIs[i].saveButton.onClick.AddListener(() => SaveToSlot(slotIndex));
-
-                if (saveSlotUIs[i].deleteButton != null)
-                    saveSlotUIs[i].deleteButton.onClick.AddListener(() => DeleteSlot(slotIndex));
-            }
+                saveSlotUIs[i].UpdateDisplay(SaveGameManager.Instance.GetSaveData(i));
         }
-
-        // Setup other buttons
-        if (showSaveSlotsButton != null)
-            showSaveSlotsButton.onClick.AddListener(ShowSaveSlots);
-
-        if (hideSaveSlotsButton != null)
-            hideSaveSlotsButton.onClick.AddListener(HideSaveSlots);
-
-        // Setup confirmation dialog
-        if (newGameConfirmDialog != null)
-        {
-            newGameConfirmDialog.SetActive(false);
-
-            if (confirmNewGameButton != null)
-                confirmNewGameButton.onClick.AddListener(ConfirmNewGame);
-
-            if (cancelNewGameButton != null)
-                cancelNewGameButton.onClick.AddListener(CancelNewGame);
-        }
-
-        // Hide save slots initially
-        if (saveSlotPanel != null)
-            saveSlotPanel.SetActive(false);
     }
 
-    private void UpdateSaveSlotDisplays()
+    // -------------------------------------------------------------------------
+    // Button handlers
+    // -------------------------------------------------------------------------
+    private void OnNewGameClicked()
     {
+        // If any save exists, ask for confirmation before overwriting progress
+        bool anySave = false;
         if (SaveGameManager.Instance != null)
         {
-            for (int i = 0; i < saveSlotUIs.Length; i++)
+            for (int i = 0; i < 3; i++)
             {
-                if (saveSlotUIs[i] != null)
-                {
-                    SaveData slotData = SaveGameManager.Instance.GetSaveData(i);
-                    saveSlotUIs[i].UpdateDisplay(slotData);
-                }
+                if (SaveGameManager.Instance.HasValidSave(i)) { anySave = true; break; }
             }
         }
+
+        if (anySave && newGameConfirmDialog != null)
+        {
+            newGameConfirmDialog.SetActive(true);
+        }
+        else
+        {
+            StartNewGame();
+        }
+    }
+
+    private void ConfirmNewGame()
+    {
+        if (newGameConfirmDialog != null) newGameConfirmDialog.SetActive(false);
+        StartNewGame();
+    }
+
+    private void CancelNewGame()
+    {
+        if (newGameConfirmDialog != null) newGameConfirmDialog.SetActive(false);
+    }
+
+    private void StartNewGame()
+    {
+        // New game goes to slot 0 by default - you could let the player pick
+        if (SaveGameManager.Instance != null)
+            SaveGameManager.Instance.SetCurrentSaveSlot(0);
+
+        SceneManager.LoadScene(firstSceneName);
     }
 
     public void ShowSaveSlots()
@@ -94,85 +133,18 @@ public class MainMenu : MonoBehaviour
         if (saveSlotPanel != null)
         {
             saveSlotPanel.SetActive(true);
-            UpdateSaveSlotDisplays();
+            RefreshSlotDisplays();
         }
     }
 
     public void HideSaveSlots()
     {
-        if (saveSlotPanel != null)
-            saveSlotPanel.SetActive(false);
-    }
-
-    private void LoadFromSlot(int slotIndex)
-    {
-        if (SaveGameManager.Instance != null && SaveGameManager.Instance.HasValidSave(slotIndex))
-        {
-            SaveGameManager.Instance.LoadSavedLevel(slotIndex);
-        }
-    }
-
-    private void SaveToSlot(int slotIndex)
-    {
-        // You can't save from main menu, but this could be used for copying saves
-        Debug.Log($"Cannot save to slot {slotIndex + 1} from main menu");
-    }
-
-    private void DeleteSlot(int slotIndex)
-    {
-        if (SaveGameManager.Instance != null)
-        {
-            SaveGameManager.Instance.DeleteSave(slotIndex);
-            UpdateSaveSlotDisplays();
-        }
-    }
-
-    public void PlayGame()
-    {
-        // Check if any save exists
-        bool hasSaves = false;
-        if (SaveGameManager.Instance != null)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                if (SaveGameManager.Instance.HasValidSave(i))
-                {
-                    hasSaves = true;
-                    break;
-                }
-            }
-        }
-
-        if (hasSaves && newGameConfirmDialog != null)
-        {
-            newGameConfirmDialog.SetActive(true);
-            return;
-        }
-
-        StartNewGame();
-    }
-
-    private void StartNewGame()
-    {
-        SceneManager.LoadScene("Tutorial");
-    }
-
-    private void ConfirmNewGame()
-    {
-        if (newGameConfirmDialog != null)
-            newGameConfirmDialog.SetActive(false);
-        StartNewGame();
-    }
-
-    private void CancelNewGame()
-    {
-        if (newGameConfirmDialog != null)
-            newGameConfirmDialog.SetActive(false);
+        if (saveSlotPanel != null) saveSlotPanel.SetActive(false);
     }
 
     public void QuitGame()
     {
-        Debug.Log("Quit");
+        Debug.Log("[MainMenu] Quit");
         Application.Quit();
     }
 }

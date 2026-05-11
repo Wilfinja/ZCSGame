@@ -1,135 +1,127 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Shown when the player dies. Lets them load a save, restart, or quit to menu.
+/// Does NOT contain save functionality - dying shouldn't overwrite your progress.
+/// </summary>
 public class GameOverMenu : MonoBehaviour
 {
-    public static bool gameIsPaused = false;
-
     public GameObject gameOverMenuUI;
-    public GameObject gameManager;
-    public GameObject player;
-    public GameObject gameCamera;
 
-    [Header("Save System UI")]
+    [Header("Save Slot Load UI")]
     public SaveSlotUI[] saveSlotUIs = new SaveSlotUI[3];
     public GameObject saveSlotPanel;
     public Button showLoadSlotsButton;
     public Button hideLoadSlotsButton;
     public Text gameOverInfoText;
 
-    private void Awake()
+    // Cached references filled in GameOver()
+    private GameObject player;
+    private GameObject gameCamera;
+    private GameObject gameManager;
+
+    // -------------------------------------------------------------------------
+    private void Start()
     {
+        SetupUI();
+    }
+
+    private void SetupUI()
+    {
+        for (int i = 0; i < saveSlotUIs.Length; i++)
+        {
+            if (saveSlotUIs[i] == null) continue;
+
+            saveSlotUIs[i].slotIndex = i;
+
+            // Load-only in game over screen
+            if (saveSlotUIs[i].saveButton != null)
+                saveSlotUIs[i].saveButton.gameObject.SetActive(false);
+
+            if (saveSlotUIs[i].deleteButton != null)
+                saveSlotUIs[i].deleteButton.gameObject.SetActive(false);
+
+            if (saveSlotUIs[i].loadButton != null)
+                saveSlotUIs[i].loadButton.onClick.AddListener(saveSlotUIs[i].OnLoadClicked);
+        }
+
+        if (showLoadSlotsButton != null) showLoadSlotsButton.onClick.AddListener(ShowLoadSlots);
+        if (hideLoadSlotsButton != null) hideLoadSlotsButton.onClick.AddListener(HideLoadSlots);
+
+        if (saveSlotPanel != null) saveSlotPanel.SetActive(false);
+    }
+
+    // -------------------------------------------------------------------------
+    // Called by PlayerStats when health hits zero
+    // -------------------------------------------------------------------------
+    public void GameOver()
+    {
+        // Cache scene objects before we might destroy them
         player = GameObject.FindGameObjectWithTag("Player");
         gameManager = GameObject.Find("GameManager");
         gameCamera = GameObject.FindGameObjectWithTag("MainCamera");
+
+        if (gameOverMenuUI != null) gameOverMenuUI.SetActive(true);
+        Time.timeScale = 0.5f;
+
+        // Disable player input
+        if (player != null)
+        {
+            var ctm = player.GetComponent<ClickToMove>();
+            if (ctm != null) ctm.enabled = false;
+
+            var lac = player.GetComponent<LookAtCursor>();
+            if (lac != null) lac.enabled = false;
+
+            var pi = player.GetComponent<PlayerInput>();
+            if (pi != null) pi.enabled = false;
+
+            var rb = player.GetComponent<Rigidbody2D>();
+            if (rb != null) rb.freezeRotation = true;
+        }
+
+        RefreshSlotDisplays();
+        UpdateInfoText();
     }
 
-    private void Start()
+    // -------------------------------------------------------------------------
+    // UI helpers
+    // -------------------------------------------------------------------------
+    private void RefreshSlotDisplays()
     {
-        SetupLoadUI();
-    }
+        if (SaveGameManager.Instance == null) return;
 
-    private void SetupLoadUI()
-    {
-        // Setup save slot UIs (only load functionality)
         for (int i = 0; i < saveSlotUIs.Length; i++)
         {
             if (saveSlotUIs[i] != null)
-            {
-                saveSlotUIs[i].slotIndex = i;
-
-                int slotIndex = i; // Capture for closure
-
-                if (saveSlotUIs[i].loadButton != null)
-                    saveSlotUIs[i].loadButton.onClick.AddListener(() => LoadFromSlot(slotIndex));
-
-                // Disable save and delete buttons in game over screen
-                if (saveSlotUIs[i].saveButton != null)
-                    saveSlotUIs[i].saveButton.gameObject.SetActive(false);
-
-                if (saveSlotUIs[i].deleteButton != null)
-                    saveSlotUIs[i].deleteButton.gameObject.SetActive(false);
-            }
+                saveSlotUIs[i].UpdateDisplay(SaveGameManager.Instance.GetSaveData(i));
         }
-
-        // Setup show/hide buttons
-        if (showLoadSlotsButton != null)
-            showLoadSlotsButton.onClick.AddListener(ShowLoadSlots);
-
-        if (hideLoadSlotsButton != null)
-            hideLoadSlotsButton.onClick.AddListener(HideLoadSlots);
-
-        // Hide load slots initially
-        if (saveSlotPanel != null)
-            saveSlotPanel.SetActive(false);
     }
 
-    private void UpdateSaveSlotDisplays()
+    private void UpdateInfoText()
     {
-        if (SaveGameManager.Instance != null)
+        if (gameOverInfoText == null || SaveGameManager.Instance == null) return;
+
+        int savedCount = 0;
+        SaveData newest = null;
+
+        for (int i = 0; i < 3; i++)
         {
-            for (int i = 0; i < saveSlotUIs.Length; i++)
+            SaveData d = SaveGameManager.Instance.GetSaveData(i);
+            if (d != null && !d.IsEmpty())
             {
-                if (saveSlotUIs[i] != null)
-                {
-                    SaveData slotData = SaveGameManager.Instance.GetSaveData(i);
-                    saveSlotUIs[i].UpdateDisplay(slotData);
-                }
+                savedCount++;
+                if (newest == null || d.totalPlayTime > newest.totalPlayTime)
+                    newest = d;
             }
         }
-    }
 
-    public void GameOver()
-    {
-        gameOverMenuUI.SetActive(true);
-        gameIsPaused = true;
-        Time.timeScale = .5f;
-
-        player = GameObject.FindGameObjectWithTag("Player");
-        player.GetComponent<ClickToMove>().enabled = false;
-        player.GetComponent<LookAtCursor>().enabled = false;
-        player.GetComponent<PlayerInput>().enabled = false;
-        player.GetComponent<Rigidbody2D>().freezeRotation = true;
-
-        UpdateGameOverUI();
-    }
-
-    private void UpdateGameOverUI()
-    {
-        UpdateSaveSlotDisplays();
-
-        // Show info about available saves
-        if (gameOverInfoText != null && SaveGameManager.Instance != null)
-        {
-            int availableSaves = 0;
-            SaveData mostRecentSave = null;
-
-            for (int i = 0; i < 3; i++)
-            {
-                SaveData save = SaveGameManager.Instance.GetSaveData(i);
-                if (save != null && !save.IsEmpty())
-                {
-                    availableSaves++;
-                    if (mostRecentSave == null || save.lastSaved > mostRecentSave.lastSaved)
-                    {
-                        mostRecentSave = save;
-                    }
-                }
-            }
-
-            if (availableSaves > 0)
-            {
-                gameOverInfoText.text = $"Available Saves: {availableSaves}\nMost Recent: Slot {mostRecentSave.saveSlotIndex + 1} - Level {mostRecentSave.currentLevel}";
-            }
-            else
-            {
-                gameOverInfoText.text = "No Save Data Available";
-            }
-        }
+        gameOverInfoText.text = savedCount > 0
+            ? $"Saves available: {savedCount}\nMost recent: Slot {newest.saveSlotIndex + 1} — {newest.lastSaved}"
+            : "No save data found.";
     }
 
     public void ShowLoadSlots()
@@ -137,46 +129,30 @@ public class GameOverMenu : MonoBehaviour
         if (saveSlotPanel != null)
         {
             saveSlotPanel.SetActive(true);
-            UpdateSaveSlotDisplays();
+            RefreshSlotDisplays();
         }
     }
 
     public void HideLoadSlots()
     {
-        if (saveSlotPanel != null)
-            saveSlotPanel.SetActive(false);
+        if (saveSlotPanel != null) saveSlotPanel.SetActive(false);
     }
 
-    private void LoadFromSlot(int slotIndex)
+    // -------------------------------------------------------------------------
+    // Button actions
+    // -------------------------------------------------------------------------
+    public void Restart()
     {
-        if (SaveGameManager.Instance != null && SaveGameManager.Instance.HasValidSave(slotIndex))
-        {
-            Time.timeScale = 1f;
-            CleanupCurrentScene();
-            SaveGameManager.Instance.LoadSavedLevel(slotIndex);
-        }
-        else
-        {
-            Debug.LogWarning($"No valid save in slot {slotIndex + 1}!");
-        }
-    }
-
-    private void CleanupCurrentScene()
-    {
-        if (PersistantObjDestroyer.Instance != null)
-        {
-            PersistantObjDestroyer.Instance.DestroyAllPersistentObjects();
-        }
-
-        if (gameManager != null) Destroy(gameManager);
-        if (player != null) Destroy(player);
-        if (gameCamera != null) Destroy(gameCamera);
+        Time.timeScale = 1f;
+        Scene current = SceneManager.GetActiveScene();
+        CleanupPersistentObjects();
+        SceneManager.LoadScene(current.buildIndex);
     }
 
     public void MainMenu()
     {
         Time.timeScale = 1f;
-        CleanupCurrentScene();
+        CleanupPersistentObjects();
         SceneManager.LoadScene(0);
     }
 
@@ -185,11 +161,14 @@ public class GameOverMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void Restart()
+    private void CleanupPersistentObjects()
     {
-        Time.timeScale = 1f;
-        Scene currentScene = SceneManager.GetActiveScene();
-        CleanupCurrentScene();
-        SceneManager.LoadScene(currentScene.buildIndex);
+        if (PersistantObjDestroyer.Instance != null)
+            PersistantObjDestroyer.Instance.DestroyAllPersistentObjects();
+
+        // Belt-and-suspenders: destroy known scene objects that might persist
+        if (gameManager != null) Destroy(gameManager);
+        if (player != null) Destroy(player);
+        if (gameCamera != null) Destroy(gameCamera);
     }
 }

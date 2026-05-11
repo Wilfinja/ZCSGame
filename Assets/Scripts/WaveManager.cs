@@ -42,7 +42,7 @@ public class WaveManager : MonoBehaviour
     private bool waveInProgress = false;
     private float waveTimer = 0f;
 
-    private void Start()
+    private void Awake()
     {
         if (levelEndObject != null)
             levelEndObject.SetActive(false);

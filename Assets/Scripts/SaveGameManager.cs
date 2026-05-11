@@ -1,24 +1,52 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 
+/// <summary>
+/// Manages saving and loading game state across scenes.
+///
+/// DESIGN PHILOSOPHY
+/// -----------------
+/// Save happens at level transition (or manually via F5 / pause menu).
+/// Load restores stats only - position is handled by LevelStart / PlayerSpawnPoint.
+/// We never blindly apply save data on every scene load; we only apply it when
+/// the player explicitly chose to load a save (flagged by pendingLoad).
+/// </summary>
 public class SaveGameManager : MonoBehaviour
 {
+    // -------------------------------------------------------------------------
+    // Singleton
+    // -------------------------------------------------------------------------
+    public static SaveGameManager Instance { get; private set; }
+
+    // -------------------------------------------------------------------------
+    // Inspector settings
+    // -------------------------------------------------------------------------
     [Header("Save Settings")]
     public int numberOfSaveSlots = 3;
     public bool autoSave = true;
-    public float autoSaveInterval = 60f;
-    public int currentSaveSlot = 0; // Currently active save slot
+    public float autoSaveInterval = 120f; // seconds
 
+    // -------------------------------------------------------------------------
+    // Private state
+    // -------------------------------------------------------------------------
     private string saveFolderPath;
     private SaveData[] saveSlots;
+
     private float autoSaveTimer;
-    private float playTimeTracker;
+    private float sessionPlayTime; // time accumulated this session
 
-    // Singleton pattern
-    public static SaveGameManager Instance { get; private set; }
+    // Which slot the player is actively playing in.
+    public int CurrentSaveSlot { get; private set; } = 0;
 
+    // Set to true right before loading a scene from a save so that
+    // OnSceneLoaded knows to apply save data once the scene is ready.
+    private bool pendingLoad = false;
+    private int pendingLoadSlot = 0;
+
+    // -------------------------------------------------------------------------
+    // Unity lifecycle
+    // -------------------------------------------------------------------------
     private void Awake()
     {
         if (Instance == null)
@@ -26,6 +54,10 @@ public class SaveGameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             Initialize();
+
+            // Register with the persistent object tracker so GameOver can clean up
+            if (PersistantObjDestroyer.Instance != null)
+                PersistantObjDestroyer.Instance.RegisterPersistentObject(gameObject);
         }
         else
         {
@@ -37,360 +69,18 @@ public class SaveGameManager : MonoBehaviour
     {
         saveFolderPath = Path.Combine(Application.persistentDataPath, "SaveSlots");
 
-        // Create save folder if it doesn't exist
         if (!Directory.Exists(saveFolderPath))
-        {
             Directory.CreateDirectory(saveFolderPath);
-        }
 
         saveSlots = new SaveData[numberOfSaveSlots];
-        LoadAllSaveSlots();
+        LoadAllSlotsFromDisk();
 
         autoSaveTimer = autoSaveInterval;
-        playTimeTracker = 0f;
+        sessionPlayTime = 0f;
 
-        Debug.Log($"Save folder location: {saveFolderPath}");
+        Debug.Log($"[SaveGameManager] Save folder: {saveFolderPath}");
     }
 
-    private void Update()
-    {
-        playTimeTracker += Time.deltaTime;
-
-        if (autoSave && HasValidSaveInCurrentSlot())
-        {
-            autoSaveTimer -= Time.deltaTime;
-            if (autoSaveTimer <= 0f)
-            {
-                SaveGame(currentSaveSlot);
-                autoSaveTimer = autoSaveInterval;
-            }
-        }
-
-        // Debug keys
-        if (Input.GetKeyDown(KeyCode.F5))
-        {
-            SaveGame(currentSaveSlot);
-            Debug.Log($"Manual save to slot {currentSaveSlot + 1}!");
-        }
-
-        if (Input.GetKeyDown(KeyCode.F9))
-        {
-            LoadGame(currentSaveSlot);
-            ApplySaveDataToGame(currentSaveSlot);
-            Debug.Log($"Manual load from slot {currentSaveSlot + 1}!");
-        }
-    }
-
-    public void LoadAllSaveSlots()
-    {
-        for (int i = 0; i < numberOfSaveSlots; i++)
-        {
-            string filePath = GetSaveFilePath(i);
-
-            try
-            {
-                if (File.Exists(filePath))
-                {
-                    string jsonData = File.ReadAllText(filePath);
-                    saveSlots[i] = JsonUtility.FromJson<SaveData>(jsonData);
-                }
-                else
-                {
-                    saveSlots[i] = new SaveData(i);
-                }
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"Failed to load save slot {i + 1}: {e.Message}");
-                saveSlots[i] = new SaveData(i);
-            }
-        }
-
-        Debug.Log($"Loaded {numberOfSaveSlots} save slots");
-    }
-
-    public void SaveGame(int slotIndex)
-    {
-        if (slotIndex < 0 || slotIndex >= numberOfSaveSlots)
-        {
-            Debug.LogError($"Invalid save slot index: {slotIndex}");
-            return;
-        }
-
-        try
-        {
-            // Initialize slot if it doesn't exist
-            if (saveSlots[slotIndex] == null)
-            {
-                saveSlots[slotIndex] = new SaveData(slotIndex);
-            }
-
-            UpdateSaveDataFromCurrentGame(slotIndex);
-
-            string jsonData = JsonUtility.ToJson(saveSlots[slotIndex], true);
-            string filePath = GetSaveFilePath(slotIndex);
-
-            File.WriteAllText(filePath, jsonData);
-
-            Debug.Log($"Game saved to slot {slotIndex + 1}!");
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Failed to save to slot {slotIndex + 1}: {e.Message}");
-        }
-    }
-
-    public void LoadGame(int slotIndex)
-    {
-        if (slotIndex < 0 || slotIndex >= numberOfSaveSlots)
-        {
-            Debug.LogError($"Invalid save slot index: {slotIndex}");
-            return;
-        }
-
-        string filePath = GetSaveFilePath(slotIndex);
-
-        try
-        {
-            if (File.Exists(filePath))
-            {
-                string jsonData = File.ReadAllText(filePath);
-                saveSlots[slotIndex] = JsonUtility.FromJson<SaveData>(jsonData);
-                currentSaveSlot = slotIndex;
-                Debug.Log($"Game loaded from slot {slotIndex + 1}!");
-            }
-            else
-            {
-                Debug.LogWarning($"No save file found in slot {slotIndex + 1}");
-            }
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Failed to load from slot {slotIndex + 1}: {e.Message}");
-        }
-    }
-
-    private void UpdateSaveDataFromCurrentGame(int slotIndex)
-    {
-        SaveData saveData = saveSlots[slotIndex];
-
-        // Update save info
-        saveData.lastSaved = System.DateTime.Now;
-        saveData.currentSceneName = SceneManager.GetActiveScene().name;
-        saveData.totalPlayTime += playTimeTracker;
-        playTimeTracker = 0f;
-
-        // Update player position
-        ClickToMove player = ClickToMove.Instance;
-        if (player != null)
-        {
-            Vector3 playerPos = player.transform.position;
-            saveData.playerPosX = playerPos.x;
-            saveData.playerPosY = playerPos.y;
-            saveData.playerPosZ = playerPos.z;
-
-            saveData.isHoldingItem = player.IsHoldingItem();
-            saveData.heldItemType = player.IsHoldingItem() && player.GetHeldItem() != null ?
-                player.GetHeldItem().gameObject.name : "";
-        }
-
-        // Update stats from GameManager
-        if (GameManager.Instance != null && GameManager.Instance.PlayerStats != null)
-        {
-            saveData.currentHealth = GameManager.Instance.PlayerStats.CurrentHealth;
-            saveData.maxHealth = GameManager.Instance.PlayerStats.MaxHealth;
-            saveData.currentChairLevel = GameManager.Instance.PlayerStats.CurrentChairLevel;
-            saveData.maxChairLevel = GameManager.Instance.PlayerStats.MaxChairLevel;
-        }
-
-        // Update drag
-        PlayerDrag playerDrag = FindFirstObjectByType<PlayerDrag>();
-        if (playerDrag != null)
-        {
-            saveData.currentDrag = playerDrag.GetCurrentDrag();
-        }
-    }
-
-    public void ApplySaveDataToGame(int slotIndex)
-    {
-        if (slotIndex < 0 || slotIndex >= numberOfSaveSlots || saveSlots[slotIndex] == null)
-        {
-            Debug.LogError($"Cannot apply save data from invalid slot: {slotIndex}");
-            return;
-        }
-
-        SaveData saveData = saveSlots[slotIndex];
-        currentSaveSlot = slotIndex;
-
-        // Apply to GameManager
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.PlayerStats.CurrentHealth = saveData.currentHealth;
-            GameManager.Instance.PlayerStats.MaxHealth = saveData.maxHealth;
-            GameManager.Instance.PlayerStats.CurrentChairLevel = saveData.currentChairLevel;
-            GameManager.Instance.PlayerStats.MaxChairLevel = saveData.maxChairLevel;
-
-            if (GameManager.Instance.healthBar != null)
-            {
-                GameManager.Instance.healthBar.SetMaxHealth(saveData.maxHealth);
-                GameManager.Instance.healthBar.SetHeatlth(saveData.currentHealth);
-            }
-
-            if (GameManager.Instance.chairBar != null)
-            {
-                GameManager.Instance.chairBar.SetMaxChair(saveData.maxChairLevel);
-                GameManager.Instance.chairBar.SetChair(saveData.currentChairLevel);
-            }
-        }
-
-        // Apply player position
-        ClickToMove player = ClickToMove.Instance;
-        if (player != null)
-        {
-            Vector3 savedPosition = new Vector3(saveData.playerPosX, saveData.playerPosY, saveData.playerPosZ);
-            player.transform.position = savedPosition;
-
-            if (saveData.isHoldingItem && !string.IsNullOrEmpty(saveData.heldItemType))
-            {
-                RestoreHeldItem(saveData.heldItemType);
-            }
-        }
-
-        // Sync PlayerStats
-        PlayerStats playerStats = PlayerStats.Instance;
-        if (playerStats != null)
-        {
-            playerStats.health = saveData.currentHealth;
-            playerStats.maxHealth = saveData.maxHealth;
-            playerStats.chairLevel = saveData.currentChairLevel;
-            playerStats.maxChairLevel = saveData.maxChairLevel;
-        }
-
-        // Apply drag if not in hazard
-        PlayerDrag playerDrag = FindFirstObjectByType<PlayerDrag>();
-        if (playerDrag != null && !playerDrag.IsInHazard())
-        {
-            Rigidbody2D rb = playerDrag.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                rb.linearDamping = saveData.currentDrag;
-            }
-        }
-    }
-
-    private void RestoreHeldItem(string itemType)
-    {
-        GameObject[] allItems = GameObject.FindGameObjectsWithTag("ThrowableItem");
-
-        foreach (GameObject item in allItems)
-        {
-            if (item.name.Contains(itemType) || item.name == itemType)
-            {
-                ThrowableItem throwableItem = item.GetComponent<ThrowableItem>();
-                if (throwableItem != null && ClickToMove.Instance != null)
-                {
-                    throwableItem.Pickup(ClickToMove.Instance.itemHold);
-                    ClickToMove.Instance.heldItem = throwableItem;
-                    Debug.Log($"Restored held item: {itemType}");
-                    return;
-                }
-            }
-        }
-
-        Debug.LogWarning($"Could not restore held item: {itemType}");
-    }
-
-    private string GetSaveFilePath(int slotIndex)
-    {
-        return Path.Combine(saveFolderPath, $"saveslot_{slotIndex}.json");
-    }
-
-    // Public methods for slot management
-    public void SetCurrentSaveSlot(int slotIndex)
-    {
-        if (slotIndex >= 0 && slotIndex < numberOfSaveSlots)
-        {
-            currentSaveSlot = slotIndex;
-        }
-    }
-
-    public SaveData GetSaveData(int slotIndex)
-    {
-        if (slotIndex >= 0 && slotIndex < numberOfSaveSlots)
-        {
-            return saveSlots[slotIndex];
-        }
-        return null;
-    }
-
-    public bool HasValidSave(int slotIndex)
-    {
-        SaveData saveData = GetSaveData(slotIndex);
-        return saveData != null && !saveData.IsEmpty();
-    }
-
-    public bool HasValidSaveInCurrentSlot()
-    {
-        return HasValidSave(currentSaveSlot);
-    }
-
-    public void DeleteSave(int slotIndex)
-    {
-        if (slotIndex < 0 || slotIndex >= numberOfSaveSlots)
-            return;
-
-        try
-        {
-            string filePath = GetSaveFilePath(slotIndex);
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            saveSlots[slotIndex] = new SaveData(slotIndex);
-            Debug.Log($"Deleted save slot {slotIndex + 1}");
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Failed to delete save slot {slotIndex + 1}: {e.Message}");
-        }
-    }
-
-    public void LoadLevel(int levelIndex, int saveSlot = -1)
-    {
-        int targetSlot = saveSlot >= 0 ? saveSlot : currentSaveSlot;
-
-        if (saveSlots[targetSlot] == null)
-            saveSlots[targetSlot] = new SaveData(targetSlot);
-
-        saveSlots[targetSlot].currentLevel = levelIndex;
-        SaveGame(targetSlot);
-        SceneManager.LoadScene($"Level{levelIndex}");
-    }
-
-    public void LoadSavedLevel(int slotIndex)
-    {
-        if (HasValidSave(slotIndex))
-        {
-            SetCurrentSaveSlot(slotIndex);
-            SceneManager.LoadScene(saveSlots[slotIndex].currentSceneName);
-        }
-    }
-
-    public void MarkLevelComplete(int levelIndex, int saveSlot = -1)
-    {
-        int targetSlot = saveSlot >= 0 ? saveSlot : currentSaveSlot;
-
-        if (saveSlots[targetSlot] != null &&
-            levelIndex >= 0 &&
-            levelIndex < saveSlots[targetSlot].levelCompletions.Length)
-        {
-            saveSlots[targetSlot].levelCompletions[levelIndex] = true;
-            SaveGame(targetSlot);
-        }
-    }
-
-    // Scene loading events
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -401,16 +91,266 @@ public class SaveGameManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void Update()
     {
-        if (HasValidSaveInCurrentSlot())
+        sessionPlayTime += Time.deltaTime;
+
+        // Auto-save only when there is an active save in the current slot
+        if (autoSave && !saveSlots[CurrentSaveSlot].IsEmpty())
         {
-            Invoke(nameof(ApplyCurrentSaveToGame), 0.1f);
+            autoSaveTimer -= Time.deltaTime;
+            if (autoSaveTimer <= 0f)
+            {
+                SaveGame(CurrentSaveSlot);
+                autoSaveTimer = autoSaveInterval;
+            }
+        }
+
+        // Debug hotkeys
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            SaveGame(CurrentSaveSlot);
+            Debug.Log($"[SaveGameManager] Manual save to slot {CurrentSaveSlot + 1}");
+        }
+
+        if (Input.GetKeyDown(KeyCode.F9))
+        {
+            LoadSavedLevel(CurrentSaveSlot);
+            Debug.Log($"[SaveGameManager] Manual load from slot {CurrentSaveSlot + 1}");
         }
     }
 
-    private void ApplyCurrentSaveToGame()
+    // -------------------------------------------------------------------------
+    // Scene loading
+    // -------------------------------------------------------------------------
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        ApplySaveDataToGame(currentSaveSlot);
+        // Only apply save data when the player explicitly asked to load one.
+        if (!pendingLoad) return;
+
+        pendingLoad = false;
+
+        // Delay one frame so all Awake/Start calls in the new scene finish first.
+        StartCoroutine(ApplyAfterDelay(pendingLoadSlot));
     }
+
+    private System.Collections.IEnumerator ApplyAfterDelay(int slotIndex)
+    {
+        yield return null; // wait one frame
+        ApplySaveDataToGame(slotIndex);
+    }
+
+    // -------------------------------------------------------------------------
+    // Public save / load API
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Save current game state into the specified slot.
+    /// Call this from LevelTransition, PauseMenu, or wherever needed.
+    /// </summary>
+    public void SaveGame(int slotIndex)
+    {
+        if (!SlotIndexValid(slotIndex)) return;
+
+        if (saveSlots[slotIndex] == null)
+            saveSlots[slotIndex] = new SaveData(slotIndex);
+
+        CollectCurrentGameState(slotIndex);
+        WriteToDisk(slotIndex);
+
+        Debug.Log($"[SaveGameManager] Saved to slot {slotIndex + 1}");
+    }
+
+    /// <summary>
+    /// Load a scene from a save slot. Stats are applied once the scene finishes loading.
+    /// </summary>
+    public void LoadSavedLevel(int slotIndex)
+    {
+        if (!SlotIndexValid(slotIndex)) return;
+        if (saveSlots[slotIndex] == null || saveSlots[slotIndex].IsEmpty())
+        {
+            Debug.LogWarning($"[SaveGameManager] Slot {slotIndex + 1} is empty.");
+            return;
+        }
+
+        CurrentSaveSlot = slotIndex;
+        pendingLoad = true;
+        pendingLoadSlot = slotIndex;
+
+        SceneManager.LoadScene(saveSlots[slotIndex].currentSceneName);
+    }
+
+    /// <summary>
+    /// Delete the data in a save slot.
+    /// </summary>
+    public void DeleteSave(int slotIndex)
+    {
+        if (!SlotIndexValid(slotIndex)) return;
+
+        string path = GetFilePath(slotIndex);
+        if (File.Exists(path))
+        {
+            try { File.Delete(path); }
+            catch (System.Exception e) { Debug.LogError($"[SaveGameManager] Delete failed: {e.Message}"); }
+        }
+
+        saveSlots[slotIndex] = new SaveData(slotIndex);
+        Debug.Log($"[SaveGameManager] Deleted slot {slotIndex + 1}");
+    }
+
+    // -------------------------------------------------------------------------
+    // Collecting & applying state
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Pull the current game state into the SaveData object.
+    /// Called just before writing to disk.
+    /// </summary>
+    private void CollectCurrentGameState(int slotIndex)
+    {
+        SaveData data = saveSlots[slotIndex];
+
+        data.currentSceneName = SceneManager.GetActiveScene().name;
+
+        // Parse level number from scene name (e.g. "Level3" -> 3, "Tutorial" -> 0)
+        string sceneName = data.currentSceneName;
+        if (sceneName.StartsWith("Level") && int.TryParse(sceneName.Substring(5), out int lvl))
+            data.currentLevel = lvl;
+        else
+            data.currentLevel = 1; // fallback so IsEmpty() stays false
+
+        // Accumulate play time
+        data.totalPlayTime += sessionPlayTime;
+        sessionPlayTime = 0f;
+
+        // Stats from GameManager
+        if (GameManager.Instance != null && GameManager.Instance.PlayerStats != null)
+        {
+            data.currentHealth = GameManager.Instance.PlayerStats.CurrentHealth;
+            data.maxHealth = GameManager.Instance.PlayerStats.MaxHealth;
+            data.currentChairLevel = GameManager.Instance.PlayerStats.CurrentChairLevel;
+            data.maxChairLevel = GameManager.Instance.PlayerStats.MaxChairLevel;
+        }
+
+        data.StampSaveTime();
+    }
+
+    /// <summary>
+    /// Push save data back into the live game objects.
+    /// Safe to call after scene load - checks for null before touching anything.
+    /// </summary>
+    public void ApplySaveDataToGame(int slotIndex)
+    {
+        if (!SlotIndexValid(slotIndex)) return;
+
+        SaveData data = saveSlots[slotIndex];
+        if (data == null || data.IsEmpty()) return;
+
+        CurrentSaveSlot = slotIndex;
+
+        // ----- GameManager / UI -----
+        if (GameManager.Instance != null && GameManager.Instance.PlayerStats != null)
+        {
+            GameManager.Instance.PlayerStats.CurrentHealth = data.currentHealth;
+            GameManager.Instance.PlayerStats.MaxHealth = data.maxHealth;
+            GameManager.Instance.PlayerStats.CurrentChairLevel = data.currentChairLevel;
+            GameManager.Instance.PlayerStats.MaxChairLevel = data.maxChairLevel;
+
+            if (GameManager.Instance.healthBar != null)
+            {
+                GameManager.Instance.healthBar.SetMaxHealth(data.maxHealth);
+                GameManager.Instance.healthBar.SetHeatlth(data.currentHealth);
+            }
+
+            if (GameManager.Instance.chairBar != null)
+            {
+                GameManager.Instance.chairBar.SetMaxChair(data.maxChairLevel);
+                GameManager.Instance.chairBar.SetChair(data.currentChairLevel);
+            }
+        }
+
+        // ----- PlayerStats singleton -----
+        if (PlayerStats.Instance != null)
+        {
+            PlayerStats.Instance.health = data.currentHealth;
+            PlayerStats.Instance.maxHealth = data.maxHealth;
+            PlayerStats.Instance.chairLevel = data.currentChairLevel;
+            PlayerStats.Instance.maxChairLevel = data.maxChairLevel;
+        }
+
+        Debug.Log($"[SaveGameManager] Applied slot {slotIndex + 1} data to game.");
+    }
+
+    // -------------------------------------------------------------------------
+    // Disk I/O
+    // -------------------------------------------------------------------------
+    private void LoadAllSlotsFromDisk()
+    {
+        for (int i = 0; i < numberOfSaveSlots; i++)
+        {
+            string path = GetFilePath(i);
+            try
+            {
+                if (File.Exists(path))
+                {
+                    string json = File.ReadAllText(path);
+                    saveSlots[i] = JsonUtility.FromJson<SaveData>(json);
+
+                    // Sanity check - if deserialization produced null, reset
+                    if (saveSlots[i] == null)
+                        saveSlots[i] = new SaveData(i);
+                }
+                else
+                {
+                    saveSlots[i] = new SaveData(i);
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[SaveGameManager] Failed to load slot {i + 1}: {e.Message}");
+                saveSlots[i] = new SaveData(i);
+            }
+        }
+    }
+
+    private void WriteToDisk(int slotIndex)
+    {
+        try
+        {
+            string json = JsonUtility.ToJson(saveSlots[slotIndex], true);
+            File.WriteAllText(GetFilePath(slotIndex), json);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[SaveGameManager] Failed to write slot {slotIndex + 1}: {e.Message}");
+        }
+    }
+
+    private string GetFilePath(int slotIndex)
+    {
+        return Path.Combine(saveFolderPath, $"saveslot_{slotIndex}.json");
+    }
+
+    // -------------------------------------------------------------------------
+    // Public query helpers
+    // -------------------------------------------------------------------------
+    public SaveData GetSaveData(int slotIndex)
+    {
+        if (!SlotIndexValid(slotIndex)) return null;
+        return saveSlots[slotIndex];
+    }
+
+    public bool HasValidSave(int slotIndex)
+    {
+        if (!SlotIndexValid(slotIndex)) return false;
+        return saveSlots[slotIndex] != null && !saveSlots[slotIndex].IsEmpty();
+    }
+
+    public void SetCurrentSaveSlot(int slotIndex)
+    {
+        if (SlotIndexValid(slotIndex))
+            CurrentSaveSlot = slotIndex;
+    }
+
+    private bool SlotIndexValid(int i) => i >= 0 && i < numberOfSaveSlots;
 }
