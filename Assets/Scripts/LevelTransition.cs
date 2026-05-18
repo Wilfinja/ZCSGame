@@ -1,18 +1,23 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// Attached to a trigger zone at the end of a level.
-/// When the player walks through it, we save progress then move to the next scene.
-/// </summary>
 public class LevelTransition : MonoBehaviour
 {
+    // Removed the old 'player' GameObject reference — GameManager is a singleton,
+    // no need to look it up via GameObject.Find every time.
+
     [Tooltip("Leave at -1 to auto-advance to the next build index scene.")]
     public int overrideNextSceneIndex = -1;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
+
+        // Tell the GameManager to save health before we leave
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.LoadHealthStats();
+        }
 
         // Save to the active slot before transitioning
         if (SaveGameManager.Instance != null)
@@ -21,11 +26,18 @@ public class LevelTransition : MonoBehaviour
             SaveGameManager.Instance.SaveGame(SaveGameManager.Instance.CurrentSaveSlot);
         }
 
-        // Load the next scene
-        int nextIndex = overrideNextSceneIndex >= 0
-            ? overrideNextSceneIndex
-            : SceneManager.GetActiveScene().buildIndex + 1;
-
-        SceneManager.LoadScene(nextIndex);
+        // Use the iris transition instead of loading directly
+        if (SceneTransitionManager.Instance != null)
+        {
+            SceneTransitionManager.Instance.TransitionToScene(
+                SceneManager.GetActiveScene().buildIndex + 1
+            );
+        }
+        else
+        {
+            // Fallback if SceneTransitionManager isn't in the scene yet
+            Debug.LogWarning("SceneTransitionManager not found — loading directly.");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
     }
 }

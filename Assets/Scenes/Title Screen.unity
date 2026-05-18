@@ -153,8 +153,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -45.51935, y: 182.41086}
-  m_SizeDelta: {x: 982.6351, y: 320.31104}
+  m_AnchoredPosition: {x: -45, y: 188}
+  m_SizeDelta: {x: 648.23, y: 324.9077}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3793229
 MonoBehaviour:
@@ -176,7 +176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 781d88edd4fcd4c4da951fad54f60ecc, type: 3}
+  m_Sprite: {fileID: 2319924574267479624, guid: f6908c097408f2d4e82cd0d204f57580, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -209,7 +209,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &102717860
 Transform:
   m_ObjectHideFlags: 0
@@ -824,6 +824,7 @@ GameObject:
   - component: {fileID: 438372989}
   - component: {fileID: 438372988}
   - component: {fileID: 438372987}
+  - component: {fileID: 438372990}
   m_Layer: 5
   m_Name: Slot 3 Button
   m_TagString: Untagged
@@ -945,6 +946,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438372985}
   m_CullTransparentMesh: 1
+--- !u!114 &438372990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438372985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67e6805578665f44bad89e89f2a76bcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveSlotUI
+  slotNumberText: {fileID: 0}
+  levelText: {fileID: 0}
+  healthText: {fileID: 0}
+  chairLevelText: {fileID: 0}
+  playTimeText: {fileID: 0}
+  lastSavedText: {fileID: 0}
+  loadButton: {fileID: 0}
+  saveButton: {fileID: 0}
+  deleteButton: {fileID: 0}
+  slotContent: {fileID: 0}
+  emptySlotContent: {fileID: 0}
+  slotIndex: 2
 --- !u!1 &460493104
 GameObject:
   m_ObjectHideFlags: 0
@@ -1342,6 +1367,7 @@ GameObject:
   - component: {fileID: 686544246}
   - component: {fileID: 686544245}
   - component: {fileID: 686544244}
+  - component: {fileID: 686544247}
   m_Layer: 5
   m_Name: Slot 1 Button
   m_TagString: Untagged
@@ -1412,19 +1438,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 686544245}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &686544245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1463,6 +1477,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 686544242}
   m_CullTransparentMesh: 1
+--- !u!114 &686544247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686544242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67e6805578665f44bad89e89f2a76bcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveSlotUI
+  slotNumberText: {fileID: 0}
+  levelText: {fileID: 0}
+  healthText: {fileID: 0}
+  chairLevelText: {fileID: 0}
+  playTimeText: {fileID: 0}
+  lastSavedText: {fileID: 0}
+  loadButton: {fileID: 0}
+  saveButton: {fileID: 0}
+  deleteButton: {fileID: 0}
+  slotContent: {fileID: 0}
+  emptySlotContent: {fileID: 0}
+  slotIndex: 0
 --- !u!1 &713055028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1567,6 +1605,7 @@ GameObject:
   - component: {fileID: 742677843}
   - component: {fileID: 742677842}
   - component: {fileID: 742677841}
+  - component: {fileID: 742677844}
   m_Layer: 5
   m_Name: Slot 2 Button
   m_TagString: Untagged
@@ -1688,6 +1727,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 742677839}
   m_CullTransparentMesh: 1
+--- !u!114 &742677844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742677839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67e6805578665f44bad89e89f2a76bcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveSlotUI
+  slotNumberText: {fileID: 0}
+  levelText: {fileID: 0}
+  healthText: {fileID: 0}
+  chairLevelText: {fileID: 0}
+  playTimeText: {fileID: 0}
+  lastSavedText: {fileID: 0}
+  loadButton: {fileID: 0}
+  saveButton: {fileID: 0}
+  deleteButton: {fileID: 0}
+  slotContent: {fileID: 0}
+  emptySlotContent: {fileID: 0}
+  slotIndex: 1
 --- !u!1 &774077066
 GameObject:
   m_ObjectHideFlags: 0
@@ -1813,7 +1876,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Start Game
+  m_text: Play Game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -2066,7 +2129,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -45, y: 20}
+  m_AnchoredPosition: {x: -250, y: -30}
   m_SizeDelta: {x: 300, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &890501605
@@ -2622,7 +2685,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -45, y: -60}
+  m_AnchoredPosition: {x: 205, y: -30}
   m_SizeDelta: {x: 300, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1094976807
@@ -2779,7 +2842,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -45, y: -140}
+  m_AnchoredPosition: {x: -45, y: -114}
   m_SizeDelta: {x: 300, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1386567359
@@ -2936,7 +2999,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -45, y: -220}
+  m_AnchoredPosition: {x: -45, y: -203}
   m_SizeDelta: {x: 300, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1457427488
@@ -3206,7 +3269,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1604146421
 Transform:
   m_ObjectHideFlags: 0
@@ -3240,14 +3303,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newGameButton: {fileID: 0}
-  quitButton: {fileID: 0}
+  quitButton: {fileID: 1457427488}
   saveSlotUIs:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  saveSlotPanel: {fileID: 0}
-  showSaveSlotsButton: {fileID: 0}
-  hideSaveSlotsButton: {fileID: 0}
+  saveSlotPanel: {fileID: 102717859}
+  showSaveSlotsButton: {fileID: 1094976807}
+  hideSaveSlotsButton: {fileID: 598226984}
   newGameConfirmDialog: {fileID: 0}
   confirmNewGameButton: {fileID: 0}
   cancelNewGameButton: {fileID: 0}
