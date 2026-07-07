@@ -198,7 +198,9 @@ public class EnemyStats : MonoBehaviour
         // Show current state as text
         if (showDebugInfo)
         {
+#if UNITY_EDITOR
             UnityEditor.Handles.Label(transform.position + Vector3.up * 2, currentState);
+#endif
         }
     }
 

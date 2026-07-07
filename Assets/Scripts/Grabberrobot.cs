@@ -63,6 +63,9 @@ public class Grabberrobot : MonoBehaviour
     public AudioClip grabSound;
     public AudioClip releaseSound;
 
+    [Header("Death FX")]
+    public ExplosionSequence explosionSequence;
+
     // ─── Escape Progress UI (optional) ─────────────────────────────────────────
     [Header("Escape UI (Optional)")]
     [Tooltip("Assign a UI Text or TMP component to show mash progress. Leave null to skip.")]
@@ -490,7 +493,6 @@ public class Grabberrobot : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        // Always release before dying
         if (currentState == GrabberState.Carrying || currentState == GrabberState.Grabbing)
             ReleasePlayer("Robot died");
 
@@ -498,9 +500,13 @@ public class Grabberrobot : MonoBehaviour
         navMeshAgent.isStopped = true;
 
         if (animator != null)
-            animator.Play("Death");     // Replace with your actual death animation name
+            animator.Play("Death");
 
-        Destroy(gameObject, 1.5f);
+        // Explosion sequence destroys the GameObject — remove the old Destroy call
+        if (explosionSequence != null)
+            explosionSequence.Play();
+        else
+            Destroy(gameObject, 1.5f); // fallback if no sequence assigned
     }
 
     #endregion
@@ -525,14 +531,17 @@ public class Grabberrobot : MonoBehaviour
             Gizmos.DrawLine(transform.position, dropPoint.position);
             Gizmos.DrawWireSphere(dropPoint.position, 0.5f);
         }
-
+#if UNITY_EDITOR
         if (Application.isPlaying)
         {
+
             UnityEditor.Handles.Label(
                 transform.position + Vector3.up * 1.5f,
                 $"{currentState} | HP:{currentHealth:F0}"
+
             );
         }
+#endif
     }
 
     IEnumerator GrabCooldown()

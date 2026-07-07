@@ -173,6 +173,9 @@ public class SaveGameManager : MonoBehaviour
             return;
         }
 
+        // ADD THIS
+        Debug.Log($"[SaveGameManager] Loading slot {slotIndex + 1} — scene: '{saveSlots[slotIndex].currentSceneName}'");
+
         CurrentSaveSlot = slotIndex;
         pendingLoad = true;
         pendingLoadSlot = slotIndex;

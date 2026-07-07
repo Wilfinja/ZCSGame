@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Pause menu — handles pausing, resuming, saving, loading, and quitting.
+/// Pause menu ï¿½ handles pausing, resuming, saving, loading, and quitting.
 /// </summary>
 public class PauseMenu : MonoBehaviour
 {
@@ -27,7 +27,6 @@ public class PauseMenu : MonoBehaviour
     // -------------------------------------------------------------------------
     private void Awake()
     {
-        // Register with the persistent object cleaner
         if (PersistantObjDestroyer.Instance != null)
             PersistantObjDestroyer.Instance.RegisterPersistentObject(gameObject);
     }
@@ -35,10 +34,9 @@ public class PauseMenu : MonoBehaviour
     private void Start()
     {
         gameManager = GameObject.Find("GameManager");
-
-        pauseMenuUI = gameObject.GetComponent<PlayerStats>()?.pauseMenu;
         input = gameObject.GetComponent<PlayerInput>();
-
+        pauseMenuUI = GameObject.FindGameObjectWithTag("PauseMenu");
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
         SetupSaveUI();
     }
 
@@ -80,8 +78,11 @@ public class PauseMenu : MonoBehaviour
         else OpenPause();
     }
 
-    private void OpenPause()
+    public void OpenPause()
     {
+        if (pauseMenuUI == null)
+            pauseMenuUI = GameObject.FindGameObjectWithTag("PauseMenu");
+
         if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
         gameIsPaused = true;
         Time.timeScale = 0f;

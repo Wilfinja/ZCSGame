@@ -1,22 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Drives the UI for a single save slot panel.
-/// Works with SaveGameManager to display, save, load, and delete saves.
+/// Set the SlotMode in the Inspector to control which buttons are shown.
+///
+/// LoadMenu  : shows Load + Delete buttons only (main menu load panel)
+/// SlotPicker: shows Select button only (new game slot picker)
+/// InGame    : shows Save + Load + Delete buttons (pause menu)
 /// </summary>
 public class SaveSlotUI : MonoBehaviour
 {
+    public enum SlotMode { LoadMenu, SlotPicker, InGame }
+
+    [Header("Mode")]
+    [Tooltip("Controls which buttons are visible. Set this in the Inspector.")]
+    public SlotMode mode = SlotMode.LoadMenu;
+
     [Header("UI References")]
-    public Text slotNumberText;
-    public Text levelText;
-    public Text healthText;
-    public Text chairLevelText;
-    public Text playTimeText;
-    public Text lastSavedText;
+    public TextMeshProUGUI slotNumberText;
+    public TextMeshProUGUI levelText;
+    public TextMeshProUGUI healthText;
+    public TextMeshProUGUI chairLevelText;
+    public TextMeshProUGUI playTimeText;
+    public TextMeshProUGUI lastSavedText;
     public Button loadButton;
     public Button saveButton;
     public Button deleteButton;
+    public Button selectButton;
     public GameObject slotContent;       // shown when slot has data
     public GameObject emptySlotContent;  // shown when slot is empty
 
@@ -28,17 +40,15 @@ public class SaveSlotUI : MonoBehaviour
     // -------------------------------------------------------------------------
     public void UpdateDisplay(SaveData data)
     {
+        bool isEmpty = data == null || data.IsEmpty();
+
+        // Slot number always shows
         if (slotNumberText != null)
             slotNumberText.text = $"Slot {slotIndex + 1}";
 
-        bool isEmpty = data == null || data.IsEmpty();
-
+        // Show the right content panel
         if (slotContent != null) slotContent.SetActive(!isEmpty);
         if (emptySlotContent != null) emptySlotContent.SetActive(isEmpty);
-
-        if (loadButton != null) loadButton.interactable = !isEmpty;
-        if (deleteButton != null) deleteButton.interactable = !isEmpty;
-        if (saveButton != null) saveButton.interactable = true; // always available
 
         if (isEmpty) return;
 
@@ -69,12 +79,22 @@ public class SaveSlotUI : MonoBehaviour
     }
 
     // -------------------------------------------------------------------------
-    // Button callbacks  (wire these up in the Inspector or from MainMenu.cs)
+    // Button callbacks
     // -------------------------------------------------------------------------
     public void OnLoadClicked()
     {
-        if (SaveGameManager.Instance == null) return;
-        if (!SaveGameManager.Instance.HasValidSave(slotIndex)) return;
+        Debug.Log($"[SaveSlotUI] OnLoadClicked - slot {slotIndex}");
+
+        if (SaveGameManager.Instance == null)
+        {
+            Debug.LogWarning("[SaveSlotUI] SaveGameManager is NULL!");
+            return;
+        }
+        if (!SaveGameManager.Instance.HasValidSave(slotIndex))
+        {
+            Debug.LogWarning($"[SaveSlotUI] No valid save in slot {slotIndex}!");
+            return;
+        }
 
         SaveGameManager.Instance.LoadSavedLevel(slotIndex);
     }
@@ -82,14 +102,19 @@ public class SaveSlotUI : MonoBehaviour
     public void OnSaveClicked()
     {
         if (SaveGameManager.Instance == null) return;
-
         SaveGameManager.Instance.SaveGame(slotIndex);
         Refresh();
     }
 
     public void OnDeleteClicked()
     {
-        if (SaveGameManager.Instance == null) return;
+        Debug.Log($"[SaveSlotUI] OnDeleteClicked - slot {slotIndex}");
+
+        if (SaveGameManager.Instance == null)
+        {
+            Debug.LogWarning("[SaveSlotUI] SaveGameManager is NULL!");
+            return;
+        }
 
         SaveGameManager.Instance.DeleteSave(slotIndex);
         Refresh();

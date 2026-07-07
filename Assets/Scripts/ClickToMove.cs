@@ -55,6 +55,25 @@ public class ClickToMove : MonoBehaviour
         heldItem = null; // Initialize held item to null
     }
 
+    void Update()
+    {
+        // Aim the gun every frame while holding it
+        if (heldItem != null)
+        {
+            SquirtGUn gun = heldItem.GetComponent<SquirtGUn>();
+            if (gun != null)
+                gun.UpdateAim();
+
+            // Shoot input
+            if (Input.GetKeyDown(KeyCode.C))
+                gun?.Shoot();
+
+            // Throw input
+            if (Input.GetKeyDown(KeyCode.Space))
+                ThrowItem();
+        }
+    }
+
     public void gameOver()
     {
         //Debug.Log("GAME OVER ClickToMove");
@@ -132,12 +151,16 @@ public class ClickToMove : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Pickup item logic - only pick up if we're not already holding an item
         ThrowableItem item = other.GetComponent<ThrowableItem>();
         if (item != null && heldItem == null)
         {
             item.Pickup(itemHold);
-            heldItem = item; // Store reference to the held item
+            heldItem = item;
+
+            // Show ammo display if it's a squirt gun
+            SquirtGUn gun = item.GetComponent<SquirtGUn>();
+            if (gun != null)
+                gun.SetHeld(true);
         }
     }
 
@@ -158,6 +181,12 @@ public class ClickToMove : MonoBehaviour
         // If we have a held item, throw it
         if (heldItem != null)
         {
+            SquirtGUn gun = heldItem.GetComponent<SquirtGUn>();
+            if (gun != null)
+            {
+                gun.SetHeld(false);
+            }
+
             // Get mouse position as percentage of screen
             Vector2 mouseScreenPercent = new Vector2(
                 Input.mousePosition.x / Screen.width,

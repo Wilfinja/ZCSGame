@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Internal;
+//using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class VacuumShooter : MonoBehaviour
@@ -325,7 +325,9 @@ public class VacuumShooter : MonoBehaviour
         // Show current state as text
         if (showDebugInfo)
         {
+#if UNITY_EDITOR
             UnityEditor.Handles.Label(transform.position + Vector3.up * 2, currentState);
+#endif
         }
     }
 

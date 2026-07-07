@@ -32,18 +32,16 @@ public class PlayerStats : MonoBehaviour
 
     private void Awake()
     {
-        dragBar = FindFirstObjectByType<DragBarScript>();
+        //dragBar = FindFirstObjectByType<DragBarScript>();
 
         //mainCanvas = GameObject.Find("Canvas");
 
-        gameOverMenu = FindFirstObjectByType<GameOverMenu>();
+        //gameOverMenu = FindFirstObjectByType<GameOverMenu>();
 
-        GameOverScreen = GameObject.Find("GameOverScreen");
-        GameOverScreen.SetActive(false);
+        //GameOverScreen = GameObject.Find("GameOverScreen");
+        //if (GameOverScreen != null) GameOverScreen.SetActive(false);
 
-        pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
-        gameObject.GetComponent<PauseMenu>().pauseMenuUI = pauseMenu;
-        //pauseMenu.SetActive(false);
+        //pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
 
         if (Instance == null)
         {
@@ -53,19 +51,21 @@ public class PlayerStats : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
-
-
     }
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        pauseMenu = GameObject.Find("PauseMenu");
-        gameObject.GetComponent<PauseMenu>().pauseMenuUI = pauseMenu;
+        GameManager = FindFirstObjectByType<GameManager>();
+        dragBar = FindFirstObjectByType<DragBarScript>();
+        gameOverMenu = FindFirstObjectByType<GameOverMenu>();
 
-        pauseMenu.SetActive(false);
-        //GameOverScreen = GameObject.FindGameObjectWithTag("GameOverScreen");
+        GameOverScreen = GameObject.Find("GameOverScreen");
+        if (GameOverScreen != null) GameOverScreen.SetActive(false);
+
+        pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
     }
 
     public void TakeDamage(int amount)
@@ -82,34 +82,26 @@ public class PlayerStats : MonoBehaviour
 
     private void Update()
     {
-
+        //GameManager = FindFirstObjectByType<GameManager>();
+        if (GameManager == null) return;
 
         dragLevel = (int)rb.linearDamping;
         dragBar.SetDrag(dragLevel);
 
-        if (health <= 0)
+        if (health <= 0 && !GameOver)
         {
-            //Debug.Log("GAME OVER");
-
             GameOverScreen.SetActive(true);
-
             ClickToMove.gameOver();
-
             gameOverMenu.GameOver();
 
-            //Set the game over script here. Should be similar to the main menu pause script.
             GameOver = true;
             GameOverScreen.SetActive(true);
-
         }
     }
 
     public void PauseRegen()
     {
-
-        //gameObject.GetComponent<PauseMenu>().pauseMenuUI = pauseMenu;
-
-        pauseMenu.SetActive(true);
+        gameObject.GetComponent<PauseMenu>().OpenPause();
     }
 
 }

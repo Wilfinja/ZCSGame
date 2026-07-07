@@ -21,18 +21,28 @@ public class SquirtProjectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        // ── Boss support ─────────────────────────────────────────────────────
         if (other.CompareTag("Robot"))
         {
-            // Deal damage and flash
+            RobotCEOBoss boss = other.GetComponent<RobotCEOBoss>();
+            if (boss != null)
+            {
+                boss.TakeDamage(damageAmount);
+                DamageFlash df = other.GetComponent<DamageFlash>();
+                if (df != null) df.Flash();
+                hitCollider.enabled = false;
+                PlayHitAnimation();
+                Destroy(gameObject, 0.05f);
+                return;
+            }
+
+            // Regular robot enemy
             other.GetComponent<EnemyStats>().TakeDamage(damageAmount);
             other.GetComponent<DamageFlash>().Flash();
             hitCollider.enabled = false;
-
-            // Play hit animation
             PlayHitAnimation();
-
-            // Destroy projectile (but animation will survive)
-            Destroy(gameObject, .2f);
+            Destroy(gameObject, .2f); 
+            return;
         }
         // ── Grabber robot support ────────────────────────────────────────
         else if (other.CompareTag("Grabber"))

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum Eatable
 {
@@ -75,20 +76,22 @@ public class ThrowableItem : MonoBehaviour
         StartCoroutine(ReactivateRB());
         isHeld = false;
         transform.SetParent(null);
+
+        // Pickup() parented this under the persistent player, which silently moved
+        // it into the DontDestroyOnLoad scene. Unparenting alone doesn't undo that -
+        // we have to explicitly hand it back to the active gameplay scene, or it will
+        // survive every future scene load/restart.
+        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
+
         rb.bodyType = RigidbodyType2D.Dynamic;
         transform.position = GameObject.FindGameObjectWithTag("Throw").transform.position;
 
-        // Clear any existing velocity
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
-
-        //Debug.Log($"About to apply force: {throwDirection * throwForce}");
         rb.AddForce(throwDirection * throwForce, ForceMode2D.Impulse);
 
-        // Start monitoring velocity
         isMonitoring = true;
         StartCoroutine(MonitorVelocity());
-        //rb.AddTorque(torqueForce, ForceMode2D.Impulse);
     }
 
     IEnumerator ReactivateRB()

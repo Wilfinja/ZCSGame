@@ -118,14 +118,12 @@ public class SquirtGUn : MonoBehaviour
 
     public void Shoot()
     {
-        if (currentAmmo > 0 && !shootDisabled && isHeld)
+        if (currentAmmo > 0 && !shootDisabled)
         {
             shootDisabled = true;
 
-            // Fire projectile
             if (waterProjectilePrefab != null && firePoint != null)
             {
-                // Get direction to mouse cursor
                 Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 1f;
 
@@ -134,46 +132,34 @@ public class SquirtGUn : MonoBehaviour
 
                 anim.Play("Fire");
 
-                // Instantiate projectile
-                GameObject projectile = Instantiate(waterProjectilePrefab, firePoint.position, Quaternion.Euler(0, 0, angle - 180));
+                GameObject projectile = Instantiate(waterProjectilePrefab, firePoint.position,
+                    Quaternion.Euler(0, 0, angle - 180));
 
-                // Add velocity to projectile
                 Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
                 if (projectileRb != null)
-                {
                     projectileRb.linearVelocity = shootDirection * projectileSpeed;
-                }
             }
 
-            // Decrease ammo
             currentAmmo--;
             UpdateAmmoDisplay();
 
-            // Play shoot sound
             if (shootSound != null && audioSource != null)
-            {
                 audioSource.PlayOneShot(shootSound);
-            }
-
-            Debug.Log($"Squirt! Ammo remaining: {currentAmmo}");
 
             StartCoroutine(wait());
         }
-        else if (!shootDisabled && isHeld)
+        else if (!shootDisabled)
         {
             shootDisabled = true;
-
-            // Empty gun - play click sound
             if (emptyClickSound != null && audioSource != null)
-            {
                 audioSource.PlayOneShot(emptyClickSound);
-            }
-
-            Debug.Log("Out of ammo! Need to refill at water cooler.");
-
             StartCoroutine(wait());
         }
-        
+    }
+
+    public void UpdateAim()
+    {
+        LAMouse();
     }
 
     private void LAMouse()

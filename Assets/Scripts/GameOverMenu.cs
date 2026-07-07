@@ -146,6 +146,8 @@ public class GameOverMenu : MonoBehaviour
         Time.timeScale = 1f;
         Scene current = SceneManager.GetActiveScene();
         CleanupPersistentObjects();
+        PlayerStats.GameOver = false;
+        LevelResetManager.Instance.RestartLevel();
         SceneManager.LoadScene(current.buildIndex);
     }
 

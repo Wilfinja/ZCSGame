@@ -6,9 +6,6 @@ public class LevelTransition : MonoBehaviour
     // Removed the old 'player' GameObject reference — GameManager is a singleton,
     // no need to look it up via GameObject.Find every time.
 
-    [Tooltip("Leave at -1 to auto-advance to the next build index scene.")]
-    public int overrideNextSceneIndex = -1;
-
     void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
@@ -19,11 +16,9 @@ public class LevelTransition : MonoBehaviour
             GameManager.Instance.LoadHealthStats();
         }
 
-        // Save to the active slot before transitioning
-        if (SaveGameManager.Instance != null)
+        if (ClickToMove.Instance != null && ClickToMove.Instance.IsHoldingItem())
         {
-            // Collect state right now (player is still alive, scene is still loaded)
-            SaveGameManager.Instance.SaveGame(SaveGameManager.Instance.CurrentSaveSlot);
+            ClickToMove.Instance.DropHeldItem();
         }
 
         // Use the iris transition instead of loading directly
