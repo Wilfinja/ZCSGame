@@ -90,7 +90,7 @@ public class PauseMenu : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         gameManager = GameObject.Find("GameManager");
-        pauseMenuUI = GameObject.FindGameObjectWithTag("PauseMenu");
+
         if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
         SetupSaveUI();
     }
@@ -106,10 +106,16 @@ public class PauseMenu : MonoBehaviour
         else OpenPause();
     }
 
+    private GameObject FindPauseMenuUI()
+    {
+        var marker = FindFirstObjectByType<PauseMenu>(FindObjectsInactive.Include);
+        return marker != null ? marker.gameObject : null;
+    }
+
     public void OpenPause()
     {
         if (pauseMenuUI == null)
-            pauseMenuUI = GameObject.FindGameObjectWithTag("PauseMenu");
+            pauseMenuUI = FindPauseMenuUI();
 
         if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
         gameIsPaused = true;

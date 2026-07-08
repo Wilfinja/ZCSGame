@@ -30,7 +30,11 @@ public class WaveManager : MonoBehaviour
     public GameObject levelEndObject;     // Activate this after final wave
 
     [Header("UI")]
-    public TextMeshProUGUI waveAnnouncementText;
+    [Tooltip("Prefab with its own Canvas + styled TMP text. Instantiated at " +
+             "runtime so there's no per-level Inspector wiring, and no risk " +
+             "of a reference pointing at an object that only exists in a " +
+             "different scene.")]
+    public GameObject waveAnnouncementPrefab;
     public float announcementDuration = 3f;
 
     [Header("Between Waves")]
@@ -42,21 +46,55 @@ public class WaveManager : MonoBehaviour
     private bool waveInProgress = false;
     private float waveTimer = 0f;
 
+    // Runtime-created announcement UI
+    private GameObject waveAnnouncementInstance;
+    private TextMeshProUGUI waveAnnouncementText;
+
     private void Awake()
     {
         if (levelEndObject != null)
             levelEndObject.SetActive(false);
 
-        if (waveAnnouncementText != null)
-            waveAnnouncementText.gameObject.SetActive(false);
+        SetupAnnouncementUI();
 
-        // Start the first wave
-        StartCoroutine(StartNextWave());
+        StartCoroutine(WaitForTransitionThenStart());
+    }
+
+    private void SetupAnnouncementUI()
+    {
+        if (waveAnnouncementPrefab == null)
+        {
+            Debug.LogWarning("[WaveManager] waveAnnouncementPrefab is not assigned — wave announcements will not be shown.");
+            return;
+        }
+
+        waveAnnouncementInstance = Instantiate(waveAnnouncementPrefab);
+        waveAnnouncementText = waveAnnouncementInstance.GetComponentInChildren<TextMeshProUGUI>();
+
+        if (waveAnnouncementText == null)
+            Debug.LogWarning("[WaveManager] waveAnnouncementPrefab has no TextMeshProUGUI in its children.");
+
+        waveAnnouncementInstance.SetActive(false);
+    }
+
+    private IEnumerator WaitForTransitionThenStart()
+    {
+        // Don't show the first wave's announcement while the iris transition
+        // is still covering the screen - it can eat the whole announcement
+        // window on a slow scene load.
+        if (SceneTransitionManager.Instance != null)
+        {
+            yield return new WaitUntil(() =>
+                SceneTransitionManager.Instance == null || !SceneTransitionManager.Instance.IsTransitioning);
+        }
+
+        yield return StartCoroutine(StartNextWave());
     }
 
     private void Update()
     {
         if (!waveInProgress) return;
+        if (currentWaveIndex < 0 || currentWaveIndex >= waves.Length) return;
 
         // Clean up destroyed enemies from the list
         activeEnemies.RemoveAll(e => e == null);
@@ -116,6 +154,23 @@ public class WaveManager : MonoBehaviour
         yield return StartCoroutine(SpawnWave(waves[currentWaveIndex]));
 
         waveTimer = 0f;
+
+        // Guard: if every entry in this wave got skipped (bad prefab / bad
+        // spawn index) there's nothing to fight, so treat it as complete
+        // right away instead of flipping waveInProgress on and letting
+        // Update() race it into the next wave a frame later.
+        if (activeEnemies.Count == 0)
+        {
+            Debug.LogWarning($"[WaveManager] {waveName} spawned zero enemies — check prefab/spawn point assignments.");
+
+            if (currentWaveIndex >= waves.Length - 1)
+                StartCoroutine(LevelComplete());
+            else
+                StartCoroutine(StartNextWave());
+
+            yield break;
+        }
+
         waveInProgress = true;
     }
 
@@ -125,13 +180,13 @@ public class WaveManager : MonoBehaviour
         {
             if (entry.enemyPrefab == null)
             {
-                Debug.LogWarning($"WaveManager: null prefab in {wave.waveName}, skipping.");
+                Debug.LogWarning($"[WaveManager] Null prefab in {wave.waveName}, skipping.");
                 continue;
             }
 
             if (entry.spawnPointIndex < 0 || entry.spawnPointIndex >= spawnPoints.Length)
             {
-                Debug.LogWarning($"WaveManager: Invalid spawn point index {entry.spawnPointIndex} in {wave.waveName}.");
+                Debug.LogWarning($"[WaveManager] Invalid spawn point index {entry.spawnPointIndex} in {wave.waveName}.");
                 continue;
             }
 
@@ -159,14 +214,15 @@ public class WaveManager : MonoBehaviour
 
     private void ShowAnnouncement(string message)
     {
-        if (waveAnnouncementText == null) return;
+        if (waveAnnouncementText == null || waveAnnouncementInstance == null) return;
+
         waveAnnouncementText.text = message;
-        waveAnnouncementText.gameObject.SetActive(true);
+        waveAnnouncementInstance.SetActive(true);
     }
 
     private void HideAnnouncement()
     {
-        if (waveAnnouncementText == null) return;
-        waveAnnouncementText.gameObject.SetActive(false);
+        if (waveAnnouncementInstance == null) return;
+        waveAnnouncementInstance.SetActive(false);
     }
 }

@@ -21,6 +21,8 @@ public class SceneTransitionManager : MonoBehaviour
     // Set to 2x the diagonal of your max resolution to be safe.
     private const float MAX_SCALE = 20f;
 
+    public bool IsTransitioning => isTransitioning;
+
     private Canvas canvas;
     private Image irisImage;
     private RectTransform irisRect;
