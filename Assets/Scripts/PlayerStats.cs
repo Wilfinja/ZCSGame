@@ -62,17 +62,7 @@ public class PlayerStats : MonoBehaviour
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        GameManager = FindFirstObjectByType<GameManager>();
-        dragBar = FindFirstObjectByType<DragBarScript>();
-        gameOverMenu = FindFirstObjectByType<GameOverMenu>();
-
         RefreshSceneReferences();
-
-        GameOverScreen = GameObject.Find("GameOverScreen");
-        if (GameOverScreen != null) GameOverScreen.SetActive(false);
-
-        pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
     }
 
     public void TakeDamage(int amount)
@@ -89,20 +79,19 @@ public class PlayerStats : MonoBehaviour
 
     private void Update()
     {
-        //GameManager = FindFirstObjectByType<GameManager>();
         if (GameManager == null) return;
+        if (rb == null) return;
 
         dragLevel = (int)rb.linearDamping;
-        dragBar.SetDrag(dragLevel);
+        if (dragBar != null) dragBar.SetDrag(dragLevel);
 
         if (health <= 0 && !GameOver)
         {
-            GameOverScreen.SetActive(true);
-            ClickToMove.gameOver();
-            gameOverMenu.GameOver();
-
             GameOver = true;
-            GameOverScreen.SetActive(true);
+
+            if (GameOverScreen != null) GameOverScreen.SetActive(true);
+            if (ClickToMove != null) ClickToMove.gameOver();
+            if (gameOverMenu != null) gameOverMenu.GameOver();
         }
     }
 
@@ -116,12 +105,16 @@ public class PlayerStats : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         GameManager = FindFirstObjectByType<GameManager>();
         dragBar = FindFirstObjectByType<DragBarScript>();
-        gameOverMenu = FindFirstObjectByType<GameOverMenu>();
 
-        GameOverScreen = GameObject.Find("GameOverScreen");
+        // GameOverScreen, GameOverMenu, and the pause menu UI are all inactive by
+        // default until triggered. FindFirstObjectByType / GameObject.Find /
+        // FindGameObjectWithTag all skip inactive objects unless told otherwise.
+        gameOverMenu = FindFirstObjectByType<GameOverMenu>(FindObjectsInactive.Include);
+        GameOverScreen = gameOverMenu != null ? gameOverMenu.gameOverMenuUI : null;
         if (GameOverScreen != null) GameOverScreen.SetActive(false);
 
-        pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
+        PauseMenu pm = FindFirstObjectByType<PauseMenu>(FindObjectsInactive.Include);
+        pauseMenu = pm != null ? pm.pauseMenuUI : null;
     }
 
 }

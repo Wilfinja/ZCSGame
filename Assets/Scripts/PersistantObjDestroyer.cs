@@ -44,23 +44,19 @@ public class PersistantObjDestroyer : MonoBehaviour
     // Destroy all persistent objects
     public void DestroyAllPersistentObjects()
     {
-        // Create a copy of the list to avoid collection modification issues during iteration
         List<GameObject> objectsToDestroy = new List<GameObject>(persistentObjects);
 
         foreach (GameObject obj in objectsToDestroy)
         {
-            // Skip destroying this manager itself
             if (obj != gameObject)
             {
                 Destroy(obj);
             }
         }
 
-        // Clear the list (except for this manager)
         persistentObjects.Clear();
-        persistentObjects.Add(gameObject);
-
-        Destroy(gameObject);
+        // Don't destroy this manager — it needs to keep tracking objects
+        // registered by whatever loads next.
     }
 
     // Destroy specific types of persistent objects

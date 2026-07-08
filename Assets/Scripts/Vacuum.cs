@@ -50,6 +50,10 @@ public class Vacuum : MonoBehaviour
 
     public Transform home;
 
+    [Header("Death FX")]
+    public ExplosionSequence explosionSequence;
+    private bool isdying;
+
     // Debug variables
     private string currentState = "";
     public bool showDebugInfo = true;
@@ -59,10 +63,7 @@ public class Vacuum : MonoBehaviour
         slowedPlayer = false;
         hasDamaged = false;
 
-        // Get NavMeshAgent component from unity so we can call on it later
         navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-
-        // Configure NavMeshAgent to make sure it's right side up
         navMeshAgent.updateRotation = false;
         navMeshAgent.updateUpAxis = false;
 
@@ -76,10 +77,9 @@ public class Vacuum : MonoBehaviour
 
         eatFinished = true;
 
-        // Make sure NavMeshAgent speed matches our moveSpeed
         navMeshAgent.speed = moveSpeed;
+        animator = GetComponent<Animator>();
 
-        // Validate home position
         if (home == null)
         {
             //Debug.LogWarning($"{gameObject.name}: Home transform is not assigned!");
@@ -88,6 +88,11 @@ public class Vacuum : MonoBehaviour
 
     private void Update()
     {
+        if (currentHealth < 0)
+        {
+            death();
+        }
+
         canSeePlayer = CheckLineOfSight();
 
         // Priority 1: Chase player if not slowed, can see player, and finished eating
@@ -212,7 +217,7 @@ public class Vacuum : MonoBehaviour
 
     private bool CheckLineOfSight()
     {
-        if (player == null) return false;
+        if (player == null || isdying) return false;
 
         // Check if player is within radius first
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
@@ -317,5 +322,22 @@ public class Vacuum : MonoBehaviour
         hasDamaged = true;
         yield return new WaitForSeconds(damageCooldown);
         hasDamaged = false;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth = currentHealth - damage;
+    }
+
+    private void death()
+    {
+        isdying = true;
+
+        if (animator != null) animator.Play("Death");
+
+        if (explosionSequence != null)
+            explosionSequence.Play();
+        else
+            Destroy(gameObject, 1.5f);
     }
 }

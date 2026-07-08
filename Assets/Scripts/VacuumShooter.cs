@@ -59,6 +59,8 @@ public class VacuumShooter : MonoBehaviour
 
     public int damageAmount = 5;
 
+    [Header("Death FX")]
+    public ExplosionSequence explosionSequence;
     private bool isdying;
 
     // Debug variables
@@ -348,6 +350,9 @@ public class VacuumShooter : MonoBehaviour
 
         animator.Play("Death");
 
-        Destroy(gameObject, 1.5f);
+        if (explosionSequence != null)
+            explosionSequence.Play();
+        else
+            Destroy(gameObject, 1.5f);
     }
 }

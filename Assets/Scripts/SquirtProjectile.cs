@@ -65,12 +65,26 @@ public class SquirtProjectile : MonoBehaviour
         // ─────────────────────────────────────────────────────────────────────
         else if (other.CompareTag("Vacuum"))
         {
-            other.GetComponent<VacuumShooter>().TakeDamage(damageAmount);
-            other.GetComponent<DamageFlash>().Flash();
+            // Could be either enemy type sharing the "Vacuum" tag — try both.
+            VacuumShooter vacuumShooter = other.GetComponent<VacuumShooter>();
+            if (vacuumShooter != null)
+            {
+                vacuumShooter.TakeDamage(damageAmount);
+            }
+            else
+            {
+                Vacuum vacuum = other.GetComponent<Vacuum>();
+                if (vacuum != null)
+                {
+                    vacuum.TakeDamage(damageAmount);
+                }
+            }
+
+            DamageFlash flash = other.GetComponent<DamageFlash>();
+            if (flash != null) flash.Flash();
+
             hitCollider.enabled = false;
-
             PlayHitAnimation();
-
             Destroy(gameObject, .05f);
         }
         else if (other.CompareTag("Environment"))
