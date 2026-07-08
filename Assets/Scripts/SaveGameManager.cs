@@ -1,6 +1,7 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 /// <summary>
 /// Manages saving and loading game state across scenes.
@@ -43,6 +44,9 @@ public class SaveGameManager : MonoBehaviour
     // OnSceneLoaded knows to apply save data once the scene is ready.
     private bool pendingLoad = false;
     private int pendingLoadSlot = 0;
+
+    private bool pendingSaveOnNextLoad = false;
+    private int pendingSaveSlot = 0;
 
     // -------------------------------------------------------------------------
     // Unity lifecycle
@@ -125,19 +129,35 @@ public class SaveGameManager : MonoBehaviour
     // -------------------------------------------------------------------------
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Only apply save data when the player explicitly asked to load one.
-        if (!pendingLoad) return;
+        if (pendingLoad)
+        {
+            pendingLoad = false;
+            StartCoroutine(ApplyAfterDelay(pendingLoadSlot));
+        }
 
-        pendingLoad = false;
-
-        // Delay one frame so all Awake/Start calls in the new scene finish first.
-        StartCoroutine(ApplyAfterDelay(pendingLoadSlot));
+        if (pendingSaveOnNextLoad)
+        {
+            pendingSaveOnNextLoad = false;
+            StartCoroutine(SaveAfterDelay(pendingSaveSlot));
+        }
     }
 
-    private System.Collections.IEnumerator ApplyAfterDelay(int slotIndex)
+    private IEnumerator ApplyAfterDelay(int slotIndex)
     {
         yield return null; // wait one frame
         ApplySaveDataToGame(slotIndex);
+    }
+
+    public void SaveOnNextSceneLoad(int slotIndex)
+    {
+        pendingSaveOnNextLoad = true;
+        pendingSaveSlot = slotIndex;
+    }
+
+    private IEnumerator SaveAfterDelay(int slotIndex)
+    {
+        yield return null;
+        SaveGame(slotIndex);
     }
 
     // -------------------------------------------------------------------------

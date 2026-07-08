@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
@@ -28,6 +29,10 @@ public class PlayerStats : MonoBehaviour
     public GameOverMenu gameOverMenu;
     public ClickToMove ClickToMove;
 
+    private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
+    private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode) => RefreshSceneReferences();
     public static PlayerStats Instance { get; private set; }
 
     private void Awake()
@@ -61,6 +66,8 @@ public class PlayerStats : MonoBehaviour
         GameManager = FindFirstObjectByType<GameManager>();
         dragBar = FindFirstObjectByType<DragBarScript>();
         gameOverMenu = FindFirstObjectByType<GameOverMenu>();
+
+        RefreshSceneReferences();
 
         GameOverScreen = GameObject.Find("GameOverScreen");
         if (GameOverScreen != null) GameOverScreen.SetActive(false);
@@ -102,6 +109,19 @@ public class PlayerStats : MonoBehaviour
     public void PauseRegen()
     {
         gameObject.GetComponent<PauseMenu>().OpenPause();
+    }
+
+    private void RefreshSceneReferences()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        GameManager = FindFirstObjectByType<GameManager>();
+        dragBar = FindFirstObjectByType<DragBarScript>();
+        gameOverMenu = FindFirstObjectByType<GameOverMenu>();
+
+        GameOverScreen = GameObject.Find("GameOverScreen");
+        if (GameOverScreen != null) GameOverScreen.SetActive(false);
+
+        pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
     }
 
 }

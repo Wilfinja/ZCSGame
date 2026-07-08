@@ -21,6 +21,11 @@ public class LevelTransition : MonoBehaviour
             ClickToMove.Instance.DropHeldItem();
         }
 
+        if (SaveGameManager.Instance != null)
+        {
+            SaveGameManager.Instance.SaveOnNextSceneLoad(SaveGameManager.Instance.CurrentSaveSlot);
+        }
+
         // Use the iris transition instead of loading directly
         if (SceneTransitionManager.Instance != null)
         {
